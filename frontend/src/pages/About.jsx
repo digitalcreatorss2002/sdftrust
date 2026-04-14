@@ -116,15 +116,25 @@ const About = () => {
               <div className="w-24 h-1 bg-accent mx-auto"></div>
 
               <p className="max-w-3xl mt-4 mx-auto text-gray-600 text-base leading-relaxed">
-                We are a purpose-driven organization committed to creating
-                meaningful impact in communities through innovation,
-                collaboration, and dedication. Our journey began with a vision
-                to empower individuals and bring sustainable change across
-                multiple regions. With a strong foundation built on trust and
-                transparency, we continue to expand our reach while staying true
-                to our core values. Our team works passionately to deliver
-                solutions that inspire growth, improve lives, and build a better
-                future for generations to come.
+                Established in 2014 by a dedicated group of professional social
+                workers, the Sustainable Development Foundation (SDF) is a
+                distinguished autonomous and 'not-for-profit' organization in
+                India, committed to poverty alleviation and sustainable
+                development. Our journey began with a vision to create a
+                positive impact on the lives of disadvantaged individuals and
+                communities, and since then, we have grown into one of the most
+                successful organizations in this domain. At SDF, we firmly
+                believe in the power of multidimensional programs to address the
+                root causes of poverty. Our efforts are focused on empowering
+                disadvantaged individuals, particularly women, by building
+                sustainable village institutions. By nurturing their talents,
+                enhancing economic abilities, and promoting healthy living, we
+                strive to provide them with the opportunity to live with dignity
+                and self-respect, exercising their rights effectively within
+                society. Our dedication to creating lasting change has led us to
+                register under the Indian Trust Registration Act 1882 on Sep 16,
+                2014, solidifying our commitment to transparency and
+                accountability.
               </p>
             </div>
 
@@ -240,30 +250,78 @@ const About = () => {
                 {
                   title: "Founder's Message",
                   icon: "🏆",
-                  desc: "A visionary leadership guiding our mission forward.",
+                  desc: "Leadership driving vision and impact.",
                   image: "about/vol.png",
-                  full: "Our founder envisioned a future where innovation meets impact, creating opportunities that transform lives and empower communities. With unwavering dedication and a strong sense of purpose, the journey began with a mission to drive sustainable change through collaboration, transparency, and trust. Over the years, this vision has evolved into a powerful movement that inspires growth, nurtures talent, and delivers meaningful results. By focusing on long-term impact rather than short-term success, the organization continues to expand its reach while staying true to its core values. Today, it stands as a symbol of leadership, resilience, and commitment to building a better future for all."
+
+                  full: "In a country as diverse and dynamic as India, inclusive and sustainable development is not merely an aspiration—it is a collective responsibility. At Sustainable Development Foundation (SDF), we are committed to ensuring that development reaches the last mile and transforms the lives of vulnerable communities.",
+
+                  full1:
+                    "We believe that development extends beyond economic growth to encompass social equity, healthcare, education, sustainable livelihoods, and dignity. Our approach focuses on long-term impact through community empowerment and capacity building.",
+
+                  full2:
+                    "Women empowerment remains at the core of our framework. SDF enables women to become economically independent and confident decision-makers, contributing to inclusive growth.",
+
+                  full4:"Our work across climate-smart agriculture, rural livelihoods, community health, nutrition, and youth engagement reflects our commitment to addressing critical challenges through scalable solutions.",
+                  full5:"We view CSR as a strategic partnership that brings together corporate institutions, government systems, and communities to drive measurable and sustainable outcomes, guided by transparency and accountability.",
+                  full6:"With the support of our partners and team, SDF remains committed to building resilient communities and creating sustainable models for a more inclusive and self-reliant India.",  
+
+                  full3: `Banaja Mishra – CEO & Founder Trustee
+                          Chairman – Sabyasachi Routray`,
                 },
+
                 {
                   title: "Board of Trustees",
                   icon: "👥",
-                  desc: "Distinguished experts ensuring accountability.",
+                  desc: "Experts ensuring governance & accountability.",
                   image: "about/vol.png",
-                  full: "Our founder envisioned a future where innovation meets impact, creating opportunities that transform lives and empower communities. With unwavering dedication and a strong sense of purpose, the journey began with a mission to drive sustainable change through collaboration, transparency, and trust. Over the years, this vision has evolved into a powerful movement that inspires growth, nurtures talent, and delivers meaningful results. By focusing on long-term impact rather than short-term success, the organization continues to expand its reach while staying true to its core values. Today, it stands as a symbol of leadership, resilience, and commitment to building a better future for all."
+
+                  full: "The Board of Trustees provides strategic guidance and ensures transparency, accountability, and long-term impact.",
+
+                  full1: `Banaja Mishra – CEO & Founder Trustee
+                          Sahin Paravin – Trustee
+                          Shardindu Upadhyay – Trustee
+                          Hamid Malik – Trustee
+                          Jakir Hussain – Trustee
+                          Sishir Kumar – Trustee`,
                 },
-                {
-                  title: "Management Team",
-                  icon: "🛡️",
-                  desc: "Dedicated professionals managing operations.",
-                  image: "about/vol.png",
-                  full: "Our management team executes strategies efficiently and ensures smooth operations.",
-                },
+
                 {
                   title: "Advisory Committee",
                   icon: "🤝",
-                  desc: "Strategic counselors providing domain expertise.",
+                  desc: "Strategic advisors guiding growth.",
                   image: "about/vol.png",
-                  full: "Our advisory committee provides expert guidance and strategic insights for growth.",
+
+                  full: "The Advisory Committee provides expert guidance and strategic insights to strengthen the mission and programs.",
+
+                  full1: `Anil Kumar Popli – Advisor (Fund Management)
+                          Alok Pattnaik – Advisor (Strategic Management)
+                          Debuja Choudhary – Advisor (CBO Management)
+                          Bandita Mishra – Advisor (Legal Affairs)`,
+                },
+
+                {
+                  title: "Management Team",
+                  icon: "🛡️",
+                  desc: "Operational leaders driving execution.",
+                  image: "about/vol.png",
+
+                  full: "The management team ensures effective implementation, coordination, and administration across all initiatives.",
+
+                  full1: `M1 Level Staff:
+                          Bighnaraj Behera – Director (Programs)
+                          Kajal Berwa – Program Manager
+                          Francisca Minj – Manager (Administration & Logistics)`,
+
+                  full2: `M2 Level Staff:
+                          Kiran – Manager (HR & Coordination)
+                          Pinki Patel – Finance Manager`,
+
+                  full3: `M3 Level Staff:
+                          Archana Kujur – Multi Task Staff (MTS)
+                          Nikhil Gupta – Program Executive
+                          Saumya Jha – Brand Communication Executive
+                          Shivam Kumar Raj – Program Executive
+                          Pallavi – Office Manager`,
                 },
               ].map((item, idx) => (
                 <div
@@ -294,8 +352,8 @@ const About = () => {
                   if (e.target === e.currentTarget) setSelectedLeader(null);
                 }}
               >
-                <div className="relative bg-white max-w-5xl w-full h-[80vh] rounded-2xl overflow-hidden shadow-xl animate-fadeIn flex flex-col md:flex-row">
-                  {/* 🔥 Close Button (Top Right of Modal) */}
+                <div className="relative bg-white max-w-5xl w-full max-h-[90vh] rounded-2xl shadow-xl animate-fadeIn flex flex-col items-center p-6">
+                  {/* Close Button */}
                   <button
                     onClick={() => setSelectedLeader(null)}
                     className="absolute top-4 right-4 z-10 bg-black/70 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-black"
@@ -303,8 +361,8 @@ const About = () => {
                     ✕
                   </button>
 
-                  {/* 🔥 Left Image (40%) */}
-                  <div className="md:w-[40%] w-full h-64 md:h-full">
+                  {/* Circle Image */}
+                  <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-100 shadow-md mb-6">
                     <img
                       src={selectedLeader.image}
                       alt={selectedLeader.title}
@@ -312,15 +370,54 @@ const About = () => {
                     />
                   </div>
 
-                  {/* 🔥 Right Content (60%) */}
-                  <div className="md:w-[60%] w-full p-8 overflow-y-auto flex flex-col justify-center text-left">
-                    <h2 className="text-3xl font-serif font-bold mb-4">
-                      {selectedLeader.title}
-                    </h2>
+                  {/* Title */}
+                  <h2 className="text-3xl font-serif font-bold mb-4 text-center">
+                    {selectedLeader.title}
+                  </h2>
 
-                    <p className="text-gray-600 leading-relaxed text-lg">
-                      {selectedLeader.full}
-                    </p>
+                  {/* 🔥 SCROLL CONTENT */}
+                  <div className="overflow-y-auto text-left px-4 space-y-4 max-w-3xl w-full">
+                    {selectedLeader.full && (
+                      <p className="text-gray-700 leading-relaxed text-lg">
+                        {selectedLeader.full}
+                      </p>
+                    )}
+
+                    {selectedLeader.full1 && (
+                      <pre className="whitespace-pre-line text-gray-600">
+                        {selectedLeader.full1}
+                      </pre>
+                    )}
+
+                    {selectedLeader.full2 && (
+                      <pre className="whitespace-pre-line text-gray-600">
+                        {selectedLeader.full2}
+                      </pre>
+                    )}
+
+                    {selectedLeader.full4 && (
+                      <pre className="whitespace-pre-line text-gray-600">
+                        {selectedLeader.full4}
+                      </pre>
+                    )}
+
+                    {selectedLeader.full5 && (
+                      <pre className="whitespace-pre-line text-gray-600">
+                        {selectedLeader.full5}
+                      </pre>
+                    )}
+
+                    {selectedLeader.full6 && (
+                      <pre className="whitespace-pre-line text-gray-600">
+                        {selectedLeader.full6}
+                      </pre>
+                    )}
+
+                    {selectedLeader.full3 && (
+                      <pre className="whitespace-pre-line text-gray-600 font-medium">
+                        {selectedLeader.full3}
+                      </pre>
+                    )}
                   </div>
                 </div>
               </div>

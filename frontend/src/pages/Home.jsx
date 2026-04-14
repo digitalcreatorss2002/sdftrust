@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
- 
+
 import {
   motion,
   useScroll,
@@ -191,22 +191,24 @@ const Home = () => {
               </div>
 
               <p className="text-gray-600 mb-6 leading-relaxed">
-                Duis eterueh voie roiar ma inots elitrum velite ne cuolestieru
-                cuigiatat llvoneaglut excepteur cillum dolore eua protert it.
-                augait noes parrat teilisuntials idupiliees ipum.
+                Established in 2014 by a dedicated group of professional social
+                workers, the Sustainable Development Foundation (SDF) is a
+                distinguished autonomous and 'not-for-profit' organization in
+                India, committed to poverty alleviation and sustainable
+                development.
               </p>
 
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-3 shrink-0"></span>
                   <span className="text-gray-600 text-sm">
-                    Pesentector tappelpat, euell cocenata velf, colotiut nnos
+                    Our journey began with a vision to create a positive impact 
                   </span>
                 </li>
                 <li className="flex items-start">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-3 shrink-0"></span>
                   <span className="text-gray-600 text-sm">
-                    Uit fanlis sed dolem frigiats mulit zooflaits veilles
+                    Our efforts are focused on empowering disadvantaged individuals, particularly women
                   </span>
                 </li>
               </ul>
