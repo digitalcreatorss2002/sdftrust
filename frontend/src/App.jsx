@@ -20,6 +20,7 @@ import VolunteerForm from './pages/VolenteerForm';
 import ProgramDetails from './pages/Programdetails';
 import ProjectDetails from './pages/Projectdetails';
 import PressCoverageDetails from './pages/PressCoverageDetails';
+import PartnersSection from './components/Partners';
 
 
 
@@ -43,6 +44,7 @@ function App() {
           <Route path="testimonials" element={<Testimonials/>} />
           <Route path="volunteerform" element={<VolunteerForm/>} />
           <Route path="projects" element={<Projects />} />
+          <Route path="partners" element={<PartnersSection />} />
           <Route path="projectdetails/:slug" element={<ProjectDetails />} />
           <Route path="press-coverage/:slug" element={<PressCoverageDetails />} />
           <Route path="publications" element={<Publications />} />

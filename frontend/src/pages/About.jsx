@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const About = () => {
   const [openFaq, setOpenFaq] = useState(null);
@@ -261,9 +262,12 @@ const About = () => {
                   full2:
                     "Women empowerment remains at the core of our framework. SDF enables women to become economically independent and confident decision-makers, contributing to inclusive growth.",
 
-                  full4:"Our work across climate-smart agriculture, rural livelihoods, community health, nutrition, and youth engagement reflects our commitment to addressing critical challenges through scalable solutions.",
-                  full5:"We view CSR as a strategic partnership that brings together corporate institutions, government systems, and communities to drive measurable and sustainable outcomes, guided by transparency and accountability.",
-                  full6:"With the support of our partners and team, SDF remains committed to building resilient communities and creating sustainable models for a more inclusive and self-reliant India.",  
+                  full4:
+                    "Our work across climate-smart agriculture, rural livelihoods, community health, nutrition, and youth engagement reflects our commitment to addressing critical challenges through scalable solutions.",
+                  full5:
+                    "We view CSR as a strategic partnership that brings together corporate institutions, government systems, and communities to drive measurable and sustainable outcomes, guided by transparency and accountability.",
+                  full6:
+                    "With the support of our partners and team, SDF remains committed to building resilient communities and creating sustainable models for a more inclusive and self-reliant India.",
 
                   full3: `Banaja Mishra – CEO & Founder Trustee
                           Chairman – Sabyasachi Routray`,
@@ -480,12 +484,14 @@ const About = () => {
                 amplify our impact and reach wider demographics.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                <div className="p-8 bg-gray-50 rounded-xl hover:shadow-md transition-shadow">
-                  <div className="font-bold text-primary text-xl mb-2">
-                    Corporate
+                <Link to="/partners">
+                  <div className="p-8 bg-gray-50 rounded-xl hover:shadow-md transition-shadow cursor-pointer">
+                    <div className="font-bold text-primary text-xl mb-2">
+                      Corporate
+                    </div>
+                    <div className="text-gray-500">CSR Partners</div>
                   </div>
-                  <div className="text-gray-500">CSR Partners</div>
-                </div>
+                </Link>
                 <div className="p-8 bg-gray-50 rounded-xl hover:shadow-md transition-shadow">
                   <div className="font-bold text-primary text-xl mb-2">
                     Public
