@@ -116,7 +116,7 @@ const About = () => {
               </h2>
               <div className="w-24 h-1 bg-accent mx-auto"></div>
 
-              <p className="max-w-3xl mt-4 mx-auto text-gray-600 text-base leading-relaxed">
+              <p className="w-[100%] mt-4 mx-auto text-gray-600 text-[18px] leading-relaxed text-left">
                 Established in 2014 by a dedicated group of professional social
                 workers, the Sustainable Development Foundation (SDF) is a
                 distinguished autonomous and 'not-for-profit' organization in
@@ -239,6 +239,7 @@ const About = () => {
         {/* 2. LEADERSHIP */}
         {activeTab === "leadership" && (
           <div className="animate-fade-in">
+            {/* HEADER */}
             <div className="text-center mb-12">
               <h2 className="text-3xl font-serif text-text-primary mb-4">
                 Leadership & Governance
@@ -246,6 +247,7 @@ const About = () => {
               <div className="w-24 h-1 bg-primary mx-auto"></div>
             </div>
 
+            {/* CARDS */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 {
@@ -255,22 +257,12 @@ const About = () => {
                   image: "about/vol.png",
 
                   full: "In a country as diverse and dynamic as India, inclusive and sustainable development is not merely an aspiration—it is a collective responsibility. At Sustainable Development Foundation (SDF), we are committed to ensuring that development reaches the last mile and transforms the lives of vulnerable communities.",
-
-                  full1:
-                    "We believe that development extends beyond economic growth to encompass social equity, healthcare, education, sustainable livelihoods, and dignity. Our approach focuses on long-term impact through community empowerment and capacity building.",
-
-                  full2:
-                    "Women empowerment remains at the core of our framework. SDF enables women to become economically independent and confident decision-makers, contributing to inclusive growth.",
-
-                  full4:
-                    "Our work across climate-smart agriculture, rural livelihoods, community health, nutrition, and youth engagement reflects our commitment to addressing critical challenges through scalable solutions.",
-                  full5:
-                    "We view CSR as a strategic partnership that brings together corporate institutions, government systems, and communities to drive measurable and sustainable outcomes, guided by transparency and accountability.",
-                  full6:
-                    "With the support of our partners and team, SDF remains committed to building resilient communities and creating sustainable models for a more inclusive and self-reliant India.",
-
-                  full3: `Banaja Mishra – CEO & Founder Trustee
-                          Chairman – Sabyasachi Routray`,
+                  full1:"We believe that development extends beyond economic growth to encompass social equity, access to healthcare, education, sustainable livelihoods, and the right to live with dignity. Our interventions are designed with a holistic approach—integrating community empowerment, institutional strengthening, and capacity building for long-term impact.",
+                  full2: "Women empowerment remains at the core of our framework. SDF is committed to enabling women to become economically independent, socially confident, and active participants in decision-making. We recognize that empowering women leads to stronger communities and inclusive growth.",
+                  full4: "Our work across climate-smart agriculture, rural livelihoods, community health, nutrition, and youth engagement reflects our commitment to addressing critical challenges through scalable solutions.",
+                  full5: "We view CSR as a strategic partnership that brings together corporate institutions, government systems, and communities to drive measurable and sustainable outcomes, guided by transparency and accountability.",
+                  full6: "With the support of our partners and team, SDF remains committed to building resilient communities and creating sustainable models for a more inclusive and self-reliant India.",
+                  full3: "Banaja Mishra – CEO & Founder Trustee",
                 },
 
                 {
@@ -279,8 +271,7 @@ const About = () => {
                   desc: "Experts ensuring governance & accountability.",
                   image: "about/vol.png",
 
-                  full: "The Board of Trustees provides strategic guidance and ensures transparency, accountability, and long-term impact.",
-
+                  full: "The Board of Trustees provides strategic guidance and oversight to ensure that the Sustainable Development Foundation continues to work with transparency, accountability, and impact for community development.",
                   full1: `Banaja Mishra – CEO & Founder Trustee
                           Sahin Paravin – Trustee
                           Shardindu Upadhyay – Trustee
@@ -295,8 +286,7 @@ const About = () => {
                   desc: "Strategic advisors guiding growth.",
                   image: "about/vol.png",
 
-                  full: "The Advisory Committee provides expert guidance and strategic insights to strengthen the mission and programs.",
-
+                  full: "The Advisory committee provides expert guidance and strategic insights to strengthen the mission and programs of the Sustainable Development Foundation.",
                   full1: `Anil Kumar Popli – Advisor (Fund Management)
                           Alok Pattnaik – Advisor (Strategic Management)
                           Debuja Choudhary – Advisor (CBO Management)
@@ -309,19 +299,15 @@ const About = () => {
                   desc: "Operational leaders driving execution.",
                   image: "about/vol.png",
 
-                  full: "The management team ensures effective implementation, coordination, and administration across all initiatives.",
-
-                  full1: `M1 Level Staff:
-                          Bighnaraj Behera – Director (Programs)
+                  full: "The management team leads the implementation of programs and ensures effective coordination, administration, and impact across all initiatives of the Sustainable Development Foundation.",
+                  full1: `Bighnaraj Behera – Director (Programs)
                           Kajal Berwa – Program Manager
                           Francisca Minj – Manager (Administration & Logistics)`,
 
-                  full2: `M2 Level Staff:
-                          Kiran – Manager (HR & Coordination)
+                  full2: `Kiran – Manager (HR & Coordination)
                           Pinki Patel – Finance Manager`,
 
-                  full3: `M3 Level Staff:
-                          Archana Kujur – Multi Task Staff (MTS)
+                  full3: `Archana Kujur – MTS
                           Nikhil Gupta – Program Executive
                           Saumya Jha – Brand Communication Executive
                           Shivam Kumar Raj – Program Executive
@@ -331,10 +317,10 @@ const About = () => {
                 <div
                   key={idx}
                   onClick={() => setSelectedLeader(item)}
-                  className="cursor-pointer bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                  className="cursor-pointer bg-white p-6 rounded-xl shadow-sm border text-center hover:-translate-y-1 hover:shadow-md transition"
                 >
                   <div className="flex justify-center mb-4">
-                    <div className="w-16 h-16 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-3xl shadow-sm">
+                    <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center text-3xl">
                       {item.icon}
                     </div>
                   </div>
@@ -356,71 +342,101 @@ const About = () => {
                   if (e.target === e.currentTarget) setSelectedLeader(null);
                 }}
               >
-                <div className="relative bg-white max-w-5xl w-full max-h-[90vh] rounded-2xl shadow-xl animate-fadeIn flex flex-col items-center p-6">
-                  {/* Close Button */}
+                <div className="relative bg-white max-w-5xl w-full max-h-[90vh] rounded-2xl shadow-xl flex flex-col items-center p-6">
+                  {/* CLOSE */}
                   <button
                     onClick={() => setSelectedLeader(null)}
-                    className="absolute top-4 right-4 z-10 bg-black/70 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-black"
+                    className="absolute top-4 right-4 bg-black/70 text-white rounded-full w-10 h-10"
                   >
                     ✕
                   </button>
 
-                  {/* Circle Image */}
-                  <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-100 shadow-md mb-6">
-                    <img
-                      src={selectedLeader.image}
-                      alt={selectedLeader.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  {/* ❌ FOUNDER IMAGE REMOVE */}
+                  {/* {selectedLeader.title !== "Founder's Message" && (
+                    <div className="w-32 h-32 rounded-full overflow-hidden mb-6">
+                      <img
+                        src={selectedLeader.image}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )} */}
 
-                  {/* Title */}
+                  {/* TITLE */}
                   <h2 className="text-3xl font-serif font-bold mb-4 text-center">
                     {selectedLeader.title}
                   </h2>
 
-                  {/* 🔥 SCROLL CONTENT */}
-                  <div className="overflow-y-auto text-left px-4 space-y-4 max-w-3xl w-full">
-                    {selectedLeader.full && (
-                      <p className="text-gray-700 leading-relaxed text-lg">
-                        {selectedLeader.full}
-                      </p>
+                  {/* CONTENT */}
+                  <div className="overflow-y-auto w-full max-w-3xl text-left space-y-6">
+                    {/* ===== FOUNDER ===== */}
+                    {selectedLeader.title === "Founder's Message" && (
+                      <>
+                        <p>{selectedLeader.full}</p>
+                        <p>{selectedLeader.full1}</p>
+                        <p>{selectedLeader.full2}</p>
+                        <p>{selectedLeader.full4}</p>
+                        <p>{selectedLeader.full5}</p>
+                        <p>{selectedLeader.full6}</p>
+                        <p className="font-semibold">{selectedLeader.full3}</p>
+                      </>
                     )}
 
-                    {selectedLeader.full1 && (
-                      <pre className="whitespace-pre-line text-gray-600">
-                        {selectedLeader.full1}
-                      </pre>
-                    )}
+                    {/* ===== OTHERS (CARD UI) ===== */}
+                    {selectedLeader.title !== "Founder's Message" && (
+                      <>
+                        <p>{selectedLeader.full}</p>
 
-                    {selectedLeader.full2 && (
-                      <pre className="whitespace-pre-line text-gray-600">
-                        {selectedLeader.full2}
-                      </pre>
-                    )}
+                        {/* MAIN LIST */}
+                        <div className="grid md:grid-cols-2 gap-6">
+                          {selectedLeader.full1
+                            ?.split("\n")
+                            .filter(Boolean)
+                            .map((name, i) => (
+                              <div
+                                key={i}
+                                className="text-center border rounded-xl p-4"
+                              >
+                                <img
+                                  src="about/vol.png"
+                                  className="w-24 h-24 mx-auto rounded-full mb-3"
+                                  alt=""
+                                />
+                                <p className="text-sm font-medium">{name}</p>
+                              </div>
+                            ))}
+                        </div>
 
-                    {selectedLeader.full4 && (
-                      <pre className="whitespace-pre-line text-gray-600">
-                        {selectedLeader.full4}
-                      </pre>
-                    )}
-
-                    {selectedLeader.full5 && (
-                      <pre className="whitespace-pre-line text-gray-600">
-                        {selectedLeader.full5}
-                      </pre>
-                    )}
-
-                    {selectedLeader.full6 && (
-                      <pre className="whitespace-pre-line text-gray-600">
-                        {selectedLeader.full6}
-                      </pre>
-                    )}
-
-                    {selectedLeader.full3 && (
-                      <pre className="whitespace-pre-line text-gray-600 font-medium">
-                        {selectedLeader.full3}
-                      </pre>
+                        {/* EXTRA BLOCKS */}
+                        {[selectedLeader.full2, selectedLeader.full3].map(
+                          (block, idx) =>
+                            block && (
+                              <div
+                                key={idx}
+                                className="grid md:grid-cols-2 gap-6"
+                              >
+                                {block
+                                  .split("\n")
+                                  .filter(Boolean)
+                                  .map((name, i) => (
+                                    <div
+                                      key={i}
+                                      className="text-center border rounded-xl p-4"
+                                    >
+                                      <img
+                                        src="about/vol.png"
+                                        className="w-24 h-24 mx-auto rounded-full mb-3"
+                                        alt=""
+                                      />
+                                      <p className="text-sm font-medium">
+                                        {name}
+                                      </p>
+                                    </div>
+                                  ))}
+                              </div>
+                            ),
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

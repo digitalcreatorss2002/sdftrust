@@ -37,11 +37,11 @@ export default function DonationForm() {
   const transactionNote = "Donation for children support";
 
   const CREATE_DONATION_API =
-    "http://localhost/backend/api/create-donation.php";
+    "http://localhost/sdftrust/backend/api/create-donation.php";
   const CHECK_STATUS_API =
-    "http://localhost/backend/api/check-payment-status.php";
+    "http://localhost/sdftrust/backend/api/check-payment-status.php";
   const EXPIRE_PAYMENT_API =
-    "http://localhost/backend/api/expire-payment.php";
+    "http://localhost/sdftrust/backend/api/expire-payment.php";
 
   const createUpiUrl = ({ upiId, payeeName, amount, note, transactionId }) => {
     const params = new URLSearchParams({
