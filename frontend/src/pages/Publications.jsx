@@ -25,8 +25,8 @@ const Publications = () => {
     if (location.hash) {
       const tab = location.hash.replace("#", "");
 
-      // Only allow valid tabs
-      if (["annual-reports", "case-studies", "galleries"].includes(tab)) {
+      // Only allow valid tabs  {"galleries"}
+      if (["annual-reports", "case-studies", ].includes(tab)) {
         setActiveTab(tab);
       }
     } else {
@@ -67,7 +67,7 @@ const Publications = () => {
 
   const reports = publications.filter((p) => p.type === "report");
   const caseStudies = publications.filter((p) => p.type === "case_study");
-  const galleries = publications.filter((p) => p.type === "gallery");
+  // const galleries = publications.filter((p) => p.type === "gallery");
 
   return (
     <div className="bg-bg-color min-h-screen">
@@ -98,7 +98,7 @@ const Publications = () => {
       {[
         { id: "annual-reports", label: "Reports 📊" },
         { id: "case-studies", label: "Case Studies 📝" },
-        { id: "galleries", label: "Gallery 🖼️" },
+        // { id: "galleries", label: "Gallery 🖼️" },
       ].map((tab) => (
         <button
           key={tab.id}
@@ -158,7 +158,7 @@ const Publications = () => {
         )}
 
         {/* GALLERY */}
-        {activeTab === "galleries" && (
+        {/* {activeTab === "galleries" && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {galleries.map((g) => (
               <div key={g.id} className="overflow-hidden rounded-lg">
@@ -170,7 +170,7 @@ const Publications = () => {
               </div>
             ))}
           </div>
-        )}
+        )} */}
 
       </div>
     </div>

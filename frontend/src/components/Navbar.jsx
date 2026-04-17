@@ -83,7 +83,7 @@ useEffect(() => {
       dropdownItems: [
         { label: 'Annual Reports', path: '/publications#annual-reports', icon: '📈' },
         { label: 'Case Studies', path: '/publications#case-studies', icon: '📝' },
-        { label: 'Photo Galleries', path: '/publications#galleries', icon: '🖼️' },
+        // { label: 'Photo Galleries', path: '/publications#galleries', icon: '🖼️' },
       ],
     },
     {

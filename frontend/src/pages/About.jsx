@@ -247,71 +247,220 @@ const About = () => {
               <div className="w-24 h-1 bg-primary mx-auto"></div>
             </div>
 
-            {/* CARDS */}
+            {/* MAIN CARDS */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
+                // ===== FOUNDER =====
                 {
                   title: "Founder's Message",
                   icon: "🏆",
                   desc: "Leadership driving vision and impact.",
-                  image: "about/vol.png",
-
-                  full: "In a country as diverse and dynamic as India, inclusive and sustainable development is not merely an aspiration—it is a collective responsibility. At Sustainable Development Foundation (SDF), we are committed to ensuring that development reaches the last mile and transforms the lives of vulnerable communities.",
-                  full1:"We believe that development extends beyond economic growth to encompass social equity, access to healthcare, education, sustainable livelihoods, and the right to live with dignity. Our interventions are designed with a holistic approach—integrating community empowerment, institutional strengthening, and capacity building for long-term impact.",
-                  full2: "Women empowerment remains at the core of our framework. SDF is committed to enabling women to become economically independent, socially confident, and active participants in decision-making. We recognize that empowering women leads to stronger communities and inclusive growth.",
-                  full4: "Our work across climate-smart agriculture, rural livelihoods, community health, nutrition, and youth engagement reflects our commitment to addressing critical challenges through scalable solutions.",
-                  full5: "We view CSR as a strategic partnership that brings together corporate institutions, government systems, and communities to drive measurable and sustainable outcomes, guided by transparency and accountability.",
-                  full6: "With the support of our partners and team, SDF remains committed to building resilient communities and creating sustainable models for a more inclusive and self-reliant India.",
-                  full3: "Banaja Mishra – CEO & Founder Trustee",
+                  image: "logo/logo.png",
+                  content: [
+                    "In a country as diverse and dynamic as India, inclusive and sustainable development is not merely an aspiration—it is a collective responsibility. At Sustainable Development Foundation (SDF), we are committed to ensuring that development reaches the last mile and transforms the lives of vulnerable communities.",
+                    "We believe that development extends beyond economic growth to encompass social equity, access to healthcare, education, sustainable livelihoods, and the right to live with dignity. Our interventions are designed with a holistic approach—integrating community empowerment, institutional strengthening, and capacity building for long-term impact.",
+                    "Women empowerment remains at the core of our framework. SDF is committed to enabling women to become economically independent, socially confident, and active participants in decision-making. We recognize that empowering women leads to stronger communities and inclusive growth.",
+                    "Our work across climate-smart agriculture, rural livelihoods, community health, nutrition, and youth engagement reflects our commitment to addressing critical challenges through scalable solutions.",
+                    "We view CSR as a strategic partnership that brings together corporate institutions, government systems, and communities to drive measurable and sustainable outcomes, guided by transparency and accountability.",
+                    "With the support of our partners and team, SDF remains committed to building resilient communities and creating sustainable models for a more inclusive and self-reliant India.",
+                    "Banaja Mishra – CEO & Founder Trustee",
+                  ],
                 },
 
+                // ===== BOARD =====
                 {
                   title: "Board of Trustees",
                   icon: "👥",
                   desc: "Experts ensuring governance & accountability.",
-                  image: "about/vol.png",
 
-                  full: "The Board of Trustees provides strategic guidance and oversight to ensure that the Sustainable Development Foundation continues to work with transparency, accountability, and impact for community development.",
-                  full1: `Banaja Mishra – CEO & Founder Trustee
-                          Sahin Paravin – Trustee
-                          Shardindu Upadhyay – Trustee
-                          Hamid Malik – Trustee
-                          Jakir Hussain – Trustee
-                          Sishir Kumar – Trustee`,
+                  intro:
+                    "The Board of Trustees provides strategic direction and oversight to ensure transparency, accountability, and long-term impact in all initiatives of the organization.",
+
+                  members: [
+                    {
+                      name: "Banaja Mishra",
+                      role: "CEO & Founder Trustee",
+                      image: "about/news.png",
+                      isFounder: true,
+                    },
+                    {
+                      name: "Sahin Paravin",
+                      role: "Trustee",
+                      image: "about/news1.png",
+                    },
+                    {
+                      name: "Shardindu Upadhyay",
+                      role: "Trustee",
+                      image: "about/news1.png",
+                    },
+                    {
+                      name: "Hamid Malik",
+                      role: "Trustee",
+                      image: "about/news3.png",
+                    },
+                    {
+                      name: "Jakir Hussain",
+                      role: "Trustee",
+                      image: "about/news4.png",
+                    },
+                    {
+                      name: "Sishir Kumar",
+                      role: "Trustee",
+                      image: "about/news.png",
+                    },
+                  ],
                 },
 
+                // ===== ADVISORY =====
                 {
                   title: "Advisory Committee",
                   icon: "🤝",
                   desc: "Strategic advisors guiding growth.",
-                  image: "about/vol.png",
-
-                  full: "The Advisory committee provides expert guidance and strategic insights to strengthen the mission and programs of the Sustainable Development Foundation.",
-                  full1: `Anil Kumar Popli – Advisor (Fund Management)
-                          Alok Pattnaik – Advisor (Strategic Management)
-                          Debuja Choudhary – Advisor (CBO Management)
-                          Bandita Mishra – Advisor (Legal Affairs)`,
+                  members: [
+                    {
+                      name: "Anil Kumar Popli",
+                      role: "Advisor (Fund Management)",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Alok Pattnaik",
+                      role: "Advisor (Strategic Management)",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Debuja Choudhary",
+                      role: "Advisor (CBO Management)",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Bandita Mishra",
+                      role: "Advisor (Legal Affairs)",
+                      image: "about/vol.png",
+                    },
+                  ],
                 },
 
+                // ===== MANAGEMENT =====
                 {
                   title: "Management Team",
                   icon: "🛡️",
                   desc: "Operational leaders driving execution.",
-                  image: "about/vol.png",
 
-                  full: "The management team leads the implementation of programs and ensures effective coordination, administration, and impact across all initiatives of the Sustainable Development Foundation.",
-                  full1: `Bighnaraj Behera – Director (Programs)
-                          Kajal Berwa – Program Manager
-                          Francisca Minj – Manager (Administration & Logistics)`,
+                  board: [
+                    {
+                      name: "Banaja Mishra",
+                      role: "CEO & Founder Trustee",
+                      image: "about/news.png",
+                      isFounder: true,
+                    },
+                    {
+                      name: "Sahin Paravin",
+                      role: "Trustee",
+                      image: "about/news.png",
+                    },
+                    {
+                      name: "Shardindu Upadhyay",
+                      role: "Trustee",
+                      image: "about/news.png",
+                    },
+                    {
+                      name: "Hamid Malik",
+                      role: "Trustee",
+                      image: "about/hamid.jpg",
+                    },
+                    {
+                      name: "Jakir Hussain",
+                      role: "Trustee",
+                      image: "about/jakir.jpg",
+                    },
+                    {
+                      name: "Sishir Kumar",
+                      role: "Trustee",
+                      image: "about/sishir.jpg",
+                    },
+                  ],
 
-                  full2: `Kiran – Manager (HR & Coordination)
-                          Pinki Patel – Finance Manager`,
+                  advisory: [
+                    {
+                      name: "Anil Kumar Popli",
+                      role: "Advisor (Fund Management)",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Alok Pattnaik",
+                      role: "Advisor (Strategic Management)",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Debuja Choudhary",
+                      role: "Advisor (CBO Management)",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Bandita Mishra",
+                      role: "Advisor (Legal Affairs)",
+                      image: "about/vol.png",
+                    },
+                  ],
 
-                  full3: `Archana Kujur – MTS
-                          Nikhil Gupta – Program Executive
-                          Saumya Jha – Brand Communication Executive
-                          Shivam Kumar Raj – Program Executive
-                          Pallavi – Office Manager`,
+                  m1: [
+                    {
+                      name: "Bighnaraj Behera",
+                      role: "Director (Programs)",
+                      image: "about/vol.png",
+                    },
+                  ],
+
+                  m2: [
+                    {
+                      name: "Kajal Berwa",
+                      role: "Program Manager",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Francisca Minj",
+                      role: "Manager (Administration & Logistics)",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Kiran",
+                      role: "Manager (HR & Coordination)",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Pinki Patel",
+                      role: "Finance Manager",
+                      image: "about/vol.png",
+                    },
+                  ],
+
+                  m3: [
+                    {
+                      name: "Archana Kujur",
+                      role: "MTS",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Nikhil Gupta",
+                      role: "Program Executive",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Saumya Jha",
+                      role: "Brand Communication Executive",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Shivam Kumar Raj",
+                      role: "Program Executive",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Pallavi",
+                      role: "Office Manager",
+                      image: "about/vol.png",
+                    },
+                  ],
                 },
               ].map((item, idx) => (
                 <div
@@ -319,10 +468,8 @@ const About = () => {
                   onClick={() => setSelectedLeader(item)}
                   className="cursor-pointer bg-white p-6 rounded-xl shadow-sm border text-center hover:-translate-y-1 hover:shadow-md transition"
                 >
-                  <div className="flex justify-center mb-4">
-                    <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center text-3xl">
-                      {item.icon}
-                    </div>
+                  <div className="flex justify-center mb-4 text-3xl">
+                    {item.icon}
                   </div>
 
                   <h3 className="font-serif text-lg font-bold mb-2">
@@ -334,111 +481,110 @@ const About = () => {
               ))}
             </div>
 
-            {/* 🔥 MODAL */}
+            {/* MODAL */}
             {selectedLeader && (
-              <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
-                onClick={(e) => {
-                  if (e.target === e.currentTarget) setSelectedLeader(null);
-                }}
-              >
-                <div className="relative bg-white max-w-5xl w-full max-h-[90vh] rounded-2xl shadow-xl flex flex-col items-center p-6">
-                  {/* CLOSE */}
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+                <div className="bg-white max-w-7xl w-full rounded-2xl p-6 overflow-y-auto max-h-[90vh] relative">
                   <button
                     onClick={() => setSelectedLeader(null)}
-                    className="absolute top-4 right-4 bg-black/70 text-white rounded-full w-10 h-10"
+                    className="absolute top-4 right-4 bg-black text-white w-10 h-10 rounded-full"
                   >
                     ✕
                   </button>
 
-                  {/* ❌ FOUNDER IMAGE REMOVE */}
-                  {/* {selectedLeader.title !== "Founder's Message" && (
-                    <div className="w-32 h-32 rounded-full overflow-hidden mb-6">
-                      <img
-                        src={selectedLeader.image}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )} */}
-
-                  {/* TITLE */}
-                  <h2 className="text-3xl font-serif font-bold mb-4 text-center">
+                  <h2 className="text-3xl font-bold text-center mb-6">
                     {selectedLeader.title}
                   </h2>
 
-                  {/* CONTENT */}
-                  <div className="overflow-y-auto w-full max-w-3xl text-left space-y-6">
-                    {/* ===== FOUNDER ===== */}
-                    {selectedLeader.title === "Founder's Message" && (
-                      <>
-                        <p>{selectedLeader.full}</p>
-                        <p>{selectedLeader.full1}</p>
-                        <p>{selectedLeader.full2}</p>
-                        <p>{selectedLeader.full4}</p>
-                        <p>{selectedLeader.full5}</p>
-                        <p>{selectedLeader.full6}</p>
-                        <p className="font-semibold">{selectedLeader.full3}</p>
-                      </>
-                    )}
+                  {/* FOUNDER */} 
+                  {selectedLeader.title === "Founder's Message" && (
+                    <div className="relative">
+                      <img
+                        src={selectedLeader.image}
+                        className="w-full h-130 object-cover rounded-xl"
+                      />
+                      <div className="absolute inset-0 bg-black/60 text-white p-6 flex flex-col justify-end space-y-5">
+                        {selectedLeader.content.map((t, i) => (
+                          <p key={i}>{t}</p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
-                    {/* ===== OTHERS (CARD UI) ===== */}
-                    {selectedLeader.title !== "Founder's Message" && (
-                      <>
-                        <p>{selectedLeader.full}</p>
+                  {/* NORMAL (BOARD + ADVISORY) */}
+                  {selectedLeader.members && (
+                    <>
+                      {/* 🔥 INTRO ADD */}
+                      {selectedLeader.intro && (
+                        <p className="text-left text-lg text-black-600 max-w-3xl mx-auto mb-6">
+                          {selectedLeader.intro}
+                        </p>
+                      )}
 
-                        {/* MAIN LIST */}
-                        <div className="grid md:grid-cols-2 gap-6">
-                          {selectedLeader.full1
-                            ?.split("\n")
-                            .filter(Boolean)
-                            .map((name, i) => (
+                      {/* MEMBERS GRID */}
+                      <div className="grid md:grid-cols-3 gap-6">
+                        {selectedLeader.members.map((m, i) => (
+                          <div
+                            key={i}
+                            className="bg-white border rounded-xl text-center"
+                          >
+                            <img
+                              src={m.image}
+                              className="w-full h-60 object-cover rounded-t-xl"
+                            />
+                            <div className="p-4">
+                              <h3 className="text-green-700 font-semibold">
+                                {m.name}
+                              </h3>
+                              <p className="text-sm text-gray-500">{m.role}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  {/* MANAGEMENT */}
+                  {selectedLeader.board && (
+                    <div className="space-y-10">
+                      {[
+                        // { title: "Board Members", data: selectedLeader.board },
+                        // {
+                        //   title: "Advisory Board",
+                        //   data: selectedLeader.advisory,
+                        // },
+                        { title: "M1 Level Staff", data: selectedLeader.m1 },
+                        { title: "M2 Level Staff", data: selectedLeader.m2 },
+                        { title: "M3 Level Staff", data: selectedLeader.m3 },
+                      ].map((section, idx) => (
+                        <div key={idx}>
+                          <h3 className="text-xl font-semibold mb-4">
+                            {section.title}
+                          </h3>
+
+                          <div className="grid md:grid-cols-3 gap-6">
+                            {section.data.map((m, i) => (
                               <div
                                 key={i}
-                                className="text-center border rounded-xl p-4"
+                                className="bg-white border rounded-xl text-center"
                               >
                                 <img
-                                  src="about/vol.png"
-                                  className="w-24 h-24 mx-auto rounded-full mb-3"
-                                  alt=""
+                                  src={m.image}
+                                  className="w-full h-56 object-cover rounded-t-xl"
                                 />
-                                <p className="text-sm font-medium">{name}</p>
+                                <div className="p-3">
+                                  <h4 className="text-green-700">{m.name}</h4>
+                                  <p className="text-sm text-gray-500">
+                                    {m.role}
+                                  </p>
+                                </div>
                               </div>
                             ))}
+                          </div>
                         </div>
-
-                        {/* EXTRA BLOCKS */}
-                        {[selectedLeader.full2, selectedLeader.full3].map(
-                          (block, idx) =>
-                            block && (
-                              <div
-                                key={idx}
-                                className="grid md:grid-cols-2 gap-6"
-                              >
-                                {block
-                                  .split("\n")
-                                  .filter(Boolean)
-                                  .map((name, i) => (
-                                    <div
-                                      key={i}
-                                      className="text-center border rounded-xl p-4"
-                                    >
-                                      <img
-                                        src="about/vol.png"
-                                        className="w-24 h-24 mx-auto rounded-full mb-3"
-                                        alt=""
-                                      />
-                                      <p className="text-sm font-medium">
-                                        {name}
-                                      </p>
-                                    </div>
-                                  ))}
-                              </div>
-                            ),
-                        )}
-                      </>
-                    )}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "react-qr-code";
+import { API_BASE_URL, ADMIN_BASE_URL } from "../config";
+
 
 export default function DonationForm() {
   const initialFormData = {
