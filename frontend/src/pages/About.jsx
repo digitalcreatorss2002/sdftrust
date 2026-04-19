@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { API_BASE_URL, ADMIN_BASE_URL } from "../config";
+
+const BASE_URL = ADMIN_BASE_URL;
+
+const makeImageUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  return `${BASE_URL}${path.replace(/^\/+/, "")}`;
+};
 
 const About = () => {
   const [openFaq, setOpenFaq] = useState(null);
@@ -9,6 +18,27 @@ const About = () => {
   // 🔥 TAB STATE
   const [activeTab, setActiveTab] = useState("who-we-are");
   const [selectedLeader, setSelectedLeader] = useState(null);
+  
+  // 🔥 DYNAMIC ABOUT DATA STATE
+  const [aboutData, setAboutData] = useState(null);
+  const [loadingAbout, setLoadingAbout] = useState(true);
+
+  useEffect(() => {
+    const fetchAboutData = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/about_who_we_are.php?t=${Date.now()}`);
+        const data = await response.json();
+        if (data.status === "success" && data.data) {
+          setAboutData(data.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch about data:", err);
+      } finally {
+        setLoadingAbout(false);
+      }
+    };
+    fetchAboutData();
+  }, []);
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
@@ -92,11 +122,10 @@ const About = () => {
                   setActiveTab(tab.id);
                   window.history.replaceState(null, "", `#${tab.id}`);
                 }}
-                className={`py-4 border-b-2 font-bold whitespace-nowrap transition-colors ${
-                  activeTab === tab.id
+                className={`py-4 border-b-2 font-bold whitespace-nowrap transition-colors ${activeTab === tab.id
                     ? "border-primary text-primary"
                     : "border-transparent text-gray-500 hover:text-primary"
-                }`}
+                  }`}
               >
                 {tab.label}
               </button>
@@ -117,25 +146,11 @@ const About = () => {
               <div className="w-24 h-1 bg-accent mx-auto"></div>
 
               <p className="w-[100%] mt-4 mx-auto text-gray-600 text-[18px] leading-relaxed text-left">
-                Established in 2014 by a dedicated group of professional social
-                workers, the Sustainable Development Foundation (SDF) is a
-                distinguished autonomous and 'not-for-profit' organization in
-                India, committed to poverty alleviation and sustainable
-                development. Our journey began with a vision to create a
-                positive impact on the lives of disadvantaged individuals and
-                communities, and since then, we have grown into one of the most
-                successful organizations in this domain. At SDF, we firmly
-                believe in the power of multidimensional programs to address the
-                root causes of poverty. Our efforts are focused on empowering
-                disadvantaged individuals, particularly women, by building
-                sustainable village institutions. By nurturing their talents,
-                enhancing economic abilities, and promoting healthy living, we
-                strive to provide them with the opportunity to live with dignity
-                and self-respect, exercising their rights effectively within
-                society. Our dedication to creating lasting change has led us to
-                register under the Indian Trust Registration Act 1882 on Sep 16,
-                2014, solidifying our commitment to transparency and
-                accountability.
+                {aboutData && aboutData.who_we_are_text ? (
+                  aboutData.who_we_are_text.split('\n').map((line, i) => <span key={i}>{line}<br /></span>)
+                ) : (
+                  "Established in 2014 by a dedicated group of professional social workers, the Sustainable Development Foundation (SDF) is a distinguished autonomous and 'not-for-profit' organization in India..."
+                )}
               </p>
             </div>
 
@@ -144,7 +159,7 @@ const About = () => {
               <div
                 className="relative rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 h-74 flex items-center justify-center text-center"
                 style={{
-                  backgroundImage: "url('/about/5.png')",
+                  backgroundImage: `url('${aboutData && aboutData.vision_image ? makeImageUrl(aboutData.vision_image) : "/about/5.png"}')`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
@@ -154,16 +169,20 @@ const About = () => {
                   <h3 className="text-2xl font-serif text-white mb-4">
                     💡 Our Vision
                   </h3>
-                  <p className="text-gray-200">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Reiciendis explicabo{" "}
-                    <span className="text-yellow-500">
-                      cumque impedit iusto quas laudantium Reiciendis explicabo
-                      tempora voluptatibus
-                    </span>{" "}
-                    , minus placeat ducimus architecto deleniti, similique vero
-                    accusantium veniam eveniet necessitatibus nulla blanditiis?
-                  </p>
+                  {aboutData && aboutData.vision_text ? (
+                    <p className="text-gray-200" dangerouslySetInnerHTML={{ __html: aboutData.vision_text }} />
+                  ) : (
+                    <p className="text-gray-200">
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Reiciendis explicabo{" "}
+                      <span className="text-yellow-500">
+                        cumque impedit iusto quas laudantium Reiciendis explicabo
+                        tempora voluptatibus
+                      </span>{" "}
+                      , minus placeat ducimus architecto deleniti, similique vero
+                      accusantium veniam eveniet necessitatibus nulla blanditiis?
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -171,7 +190,7 @@ const About = () => {
               <div
                 className="relative rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 h-74 flex items-center justify-center text-center"
                 style={{
-                  backgroundImage: "url('/about/3.png')",
+                  backgroundImage: `url('${aboutData && aboutData.mission_image ? makeImageUrl(aboutData.mission_image) : "/about/3.png"}')`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
@@ -181,16 +200,20 @@ const About = () => {
                   <h3 className="text-2xl font-serif text-white mb-4">
                     🎯 Our Mission
                   </h3>
-                  <p className="text-gray-200">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Voluptates placeat totam{" "}
-                    <span className="text-yellow-500">
-                      dolor officiis nemo aliquid, ipsum est dolorum quis optio
-                      voluptatibus
-                    </span>{" "}
-                    , necessitatibus repudiandae voluptatum quisquam laboriosam
-                    animi provident ab natus.
-                  </p>
+                  {aboutData && aboutData.mission_text ? (
+                    <p className="text-gray-200" dangerouslySetInnerHTML={{ __html: aboutData.mission_text }} />
+                  ) : (
+                    <p className="text-gray-200">
+                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                      Voluptates placeat totam{" "}
+                      <span className="text-yellow-500">
+                        dolor officiis nemo aliquid, ipsum est dolorum quis optio
+                        voluptatibus
+                      </span>{" "}
+                      , necessitatibus repudiandae voluptatum quisquam laboriosam
+                      animi provident ab natus.
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -263,7 +286,9 @@ const About = () => {
                     "Our work across climate-smart agriculture, rural livelihoods, community health, nutrition, and youth engagement reflects our commitment to addressing critical challenges through scalable solutions.",
                     "We view CSR as a strategic partnership that brings together corporate institutions, government systems, and communities to drive measurable and sustainable outcomes, guided by transparency and accountability.",
                     "With the support of our partners and team, SDF remains committed to building resilient communities and creating sustainable models for a more inclusive and self-reliant India.",
-                    "Banaja Mishra – CEO & Founder Trustee",
+                    <span className="text-bold text-2xl">
+                      "Bighnaraj Behera – CEO & Founder Trustee",
+                    </span>,
                   ],
                 },
 
@@ -274,7 +299,7 @@ const About = () => {
                   desc: "Experts ensuring governance & accountability.",
 
                   intro:
-                    "The Board of Trustees provides strategic direction and oversight to ensure transparency, accountability, and long-term impact in all initiatives of the organization.",
+                    "The Board of Trustees provides strategic guidance and oversight to ensure that the Sustainable Development Foundation continues to work with transparency, accountability, and impact for community development.",
 
                   members: [
                     {
@@ -316,6 +341,9 @@ const About = () => {
                   title: "Advisory Committee",
                   icon: "🤝",
                   desc: "Strategic advisors guiding growth.",
+                  intro:
+                    "The Advisory committee provides expert guidance and strategic insights to strengthen the mission and programs of the Sustainable Development Foundation.",
+
                   members: [
                     {
                       name: "Anil Kumar Popli",
@@ -409,6 +437,16 @@ const About = () => {
                       role: "Director (Programs)",
                       image: "about/vol.png",
                     },
+                    {
+                      name: "Kiran",
+                      role: "Manager (HR & Coordination)",
+                      image: "about/vol.png",
+                    },
+                    {
+                      name: "Pinki Patel",
+                      role: "Finance Manager",
+                      image: "about/vol.png",
+                    },
                   ],
 
                   m2: [
@@ -483,8 +521,8 @@ const About = () => {
 
             {/* MODAL */}
             {selectedLeader && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-                <div className="bg-white max-w-7xl w-full rounded-2xl p-6 overflow-y-auto max-h-[90vh] relative">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 ">
+                <div className="bg-[#6f7c2e] max-w-7xl w-full rounded-2xl p-6 overflow-y-auto max-h-[90vh] relative ">
                   <button
                     onClick={() => setSelectedLeader(null)}
                     className="absolute top-4 right-4 bg-black text-white w-10 h-10 rounded-full"
@@ -492,31 +530,29 @@ const About = () => {
                     ✕
                   </button>
 
-                  <h2 className="text-3xl font-bold text-center mb-6">
+                  <h2 className="text-4xl text-white font-bold text-center mb-1 italic ">
                     {selectedLeader.title}
                   </h2>
 
-                  {/* FOUNDER */} 
-                  {selectedLeader.title === "Founder's Message" && (
-                    <div className="relative">
-                      <img
-                        src={selectedLeader.image}
-                        className="w-full h-130 object-cover rounded-xl"
-                      />
-                      <div className="absolute inset-0 bg-black/60 text-white p-6 flex flex-col justify-end space-y-5">
-                        {selectedLeader.content.map((t, i) => (
-                          <p key={i}>{t}</p>
-                        ))}
+                  {/* FOUNDER */}
+                  <div className="bg-[#6f7c2e] p-2 rounded-xl mb-3">
+                    {selectedLeader.title === "Founder's Message" && (
+                      <div className="relative bg-[#6f7c2e] rounded-xl p-6">
+                        <div className="text-white text-md flex flex-col justify-end space-y-5">
+                          {selectedLeader.content.map((t, i) => (
+                            <p key={i}>{t}</p>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
 
                   {/* NORMAL (BOARD + ADVISORY) */}
                   {selectedLeader.members && (
                     <>
                       {/* 🔥 INTRO ADD */}
                       {selectedLeader.intro && (
-                        <p className="text-left text-lg text-black-600 max-w-3xl mx-auto mb-6">
+                        <p className="text-left text-lg text-white max-w-3xl mx-auto mb-6">
                           {selectedLeader.intro}
                         </p>
                       )}
@@ -546,44 +582,52 @@ const About = () => {
 
                   {/* MANAGEMENT */}
                   {selectedLeader.board && (
-                    <div className="space-y-10">
-                      {[
-                        // { title: "Board Members", data: selectedLeader.board },
-                        // {
-                        //   title: "Advisory Board",
-                        //   data: selectedLeader.advisory,
-                        // },
-                        { title: "M1 Level Staff", data: selectedLeader.m1 },
-                        { title: "M2 Level Staff", data: selectedLeader.m2 },
-                        { title: "M3 Level Staff", data: selectedLeader.m3 },
-                      ].map((section, idx) => (
-                        <div key={idx}>
-                          <h3 className="text-xl font-semibold mb-4">
-                            {section.title}
-                          </h3>
+                    <>
+                      {/* 🔥 INTRO ADD */}
+                      {selectedLeader.intro && (
+                        <p className="text-left text-lg text-white max-w-3xl mx-auto mb-6">
+                          {selectedLeader.intro}
+                        </p>
+                      )}
+                      <div className="space-y-10">
+                        {[
+                          // { title: "Board Members", data: selectedLeader.board },
+                          // {
+                          //   title: "Advisory Board",
+                          //   data: selectedLeader.advisory,
+                          // },
+                          { title: "M1 Level Staff", data: selectedLeader.m1 },
+                          { title: "M2 Level Staff", data: selectedLeader.m2 },
+                          { title: "M3 Level Staff", data: selectedLeader.m3 },
+                        ].map((section, idx) => (
+                          <div key={idx}>
+                            <h3 className="text-xl text-white font-semibold mb-4">
+                              {section.title}
+                            </h3>
 
-                          <div className="grid md:grid-cols-3 gap-6">
-                            {section.data.map((m, i) => (
-                              <div
-                                key={i}
-                                className="bg-white border rounded-xl text-center"
-                              >
-                                <img
-                                  src={m.image}
-                                  className="w-full h-56 object-cover rounded-t-xl"
-                                />
-                                <div className="p-3">
-                                  <h4 className="text-green-700">{m.name}</h4>
-                                  <p className="text-sm text-gray-500">
-                                    {m.role}
-                                  </p>
+                            <div className="grid md:grid-cols-3 gap-6">
+                              {section.data.map((m, i) => (
+                                <div
+                                  key={i}
+                                  className="bg-white border rounded-xl text-center"
+                                >
+                                  <img
+                                    src={m.image}
+                                    className="w-full h-56 object-cover rounded-t-xl"
+                                  />
+                                  <div className="p-3">
+                                    <h4 className="text-green-700">{m.name}</h4>
+                                    <p className="text-sm text-gray-500">
+                                      {m.role}
+                                    </p>
+                                  </div>
                                 </div>
-                              </div>
-                            ))}
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </div>
               </div>

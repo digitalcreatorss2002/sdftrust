@@ -7,51 +7,43 @@ const Navbar = () => {
   const [activeMobileMenu, setActiveMobileMenu] = useState(null);
   const [dynamicPrograms, setDynamicPrograms] = useState([]);
 
-useEffect(() => {
-  const fetchPrograms = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/programs.php?t=${Date.now()}`);
-      const data = await response.json();
-      if (data.status === 'success') {
-        const uniquePrograms = [];
-        const seen = new Set();
-
-        // 1. Define the capitalization helper
-        const formatLabel = (str) => {
-          if (!str) return "";
-          // Replaces underscores/hyphens with spaces, then fixes casing
-          const cleaned = str.replace(/[_-]/g, " ");
-          return cleaned.charAt(0).toUpperCase() + cleaned.slice(1).toLowerCase();
-        };
-
-        for (const prog of data.data) {
-          const rawId = (prog.program_id || '').trim();
-          const normalizedId = rawId.toLowerCase();
-
-          if (rawId && !seen.has(normalizedId)) {
-            seen.add(normalizedId);
-            uniquePrograms.push({
-              label: formatLabel(rawId), 
-              
-              path: `/programs#${normalizedId}`, 
-              icon: prog.icon || '📌'
-            });
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/programs.php?t=${Date.now()}`);
+        const data = await response.json();
+        if (data.status === 'success') {
+          const uniquePrograms = [];
+          const seen = new Set();
+          for (const prog of data.data) {
+            const normalizedId = (prog.program_id || '').toLowerCase().trim();
+            if (!seen.has(normalizedId)) {
+              seen.add(normalizedId);
+              uniquePrograms.push({
+                label: prog.title,
+                path: `/programs?filter=${encodeURIComponent(normalizedId)}`,
+                icon: prog.icon || '📌'
+              });
+            }
           }
+          setDynamicPrograms(uniquePrograms);
         }
-        setDynamicPrograms(uniquePrograms);
+      } catch (error) {
+        console.error("Failed to fetch programs for navbar", error);
       }
-    } catch (error) {
-      console.error("Failed to fetch programs for navbar", error);
-    }
-  };
-  fetchPrograms();
-}, []);
+    };
+    fetchPrograms();
+  }, []);
 
   const toggleMobileMenu = (menu) => {
     setActiveMobileMenu(activeMobileMenu === menu ? null : menu);
   };
 
- const menuItems = [
+
+
+
+
+  const menuItems = [
     {
       name: 'About',
       path: '/about',
@@ -61,20 +53,26 @@ useEffect(() => {
         { label: 'Leadership', path: '/about#leadership', icon: '👥' },
         { label: 'Our Approach', path: '/about#approach', icon: '🎯' },
         { label: 'Partners', path: '/about#partners', icon: '🤝' },
-        { label: 'FAQ', path: '/about#faq', icon: '🙋' }, // Fixed casing here
+        { label: 'FAQ', path: '/about#fAq', icon: '🙋' },
       ],
     },
     {
       name: 'Programs',
-      path: '/programs#health',
+      path: '/programs',
       hasDropdown: true,
       dropdownItems: dynamicPrograms.length > 0 ? dynamicPrograms : [
         { label: 'Loading...', path: '/programs', icon: '⏳' }
       ],
     },
     {
-      name: 'Our Projects',
+      name: 'Our Work',
       path: '/projects',
+      hasDropdown: true,
+      dropdownItems: [
+        { label: 'Ongoing Projects', path: '/projects#ongoing', icon: '🏢' },
+        { label: 'State-wise Listings', path: '/projects#listings', icon: '🗺️' },
+        { label: 'Impact Snapshot', path: '/projects#impact', icon: '📊' },
+      ],
     },
     {
       name: 'Publications',
@@ -83,7 +81,7 @@ useEffect(() => {
       dropdownItems: [
         { label: 'Annual Reports', path: '/publications#annual-reports', icon: '📈' },
         { label: 'Case Studies', path: '/publications#case-studies', icon: '📝' },
-        // { label: 'Photo Galleries', path: '/publications#galleries', icon: '🖼️' },
+        { label: 'In Publications', path: '/publications#in-publications', icon: '📚' },
       ],
     },
     {
@@ -97,6 +95,7 @@ useEffect(() => {
       ],
     },
     {
+      
       name: 'Get Involved',
       path: '/get-involved',
       hasDropdown: true,
@@ -119,6 +118,7 @@ useEffect(() => {
               <div className=" p-2 rounded-full flex items-center justify-center size-60">
                 <img src="/logo/logo-bg.png" alt="SDF Logo" />
               </div>
+
             </Link>
           </div>
 
@@ -155,11 +155,11 @@ useEffect(() => {
             ))}
             <div className="pl-4">
               <Link
-                to="/donate"
-                className="inline-flex items-center justify-center bg-accent hover:bg-[#237586] text-white px-6 py-2.5 rounded-full font-bold transition-all shadow-sm hover:-translate-y-0.5 hover:shadow-md ml-2"
-              >
-                Donate
-              </Link>
+  to="/donate"
+  className="inline-flex items-center justify-center bg-accent hover:bg-[#237586] text-white px-6 py-2.5 rounded-full font-bold transition-all shadow-sm hover:-translate-y-0.5 hover:shadow-md ml-2"
+>
+  Donate
+</Link>
             </div>
           </div>
 
