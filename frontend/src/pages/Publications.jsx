@@ -101,7 +101,7 @@ const Publications = () => {
             {[
               { id: "annual-reports", label: "Reports 📊" },
               { id: "case-studies", label: "Case Studies 📝" },
-              { id: "in-publications", label: "In Publications 📚" },
+              { id: "in-publications", label: "Our Publications 📚" },
             ].map((tab) => (
               <button
                 key={tab.id}

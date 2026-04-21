@@ -3,32 +3,28 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <footer className="bg-primary text-white">
-      {/* 🔥 MAIN CONTENT AREA (Now all Green, No white side) */}
+      {/* 🔥 MAIN CONTENT AREA */}
       <div className="max-w-7xl mx-auto px-6 md:px-10 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           
-          {/* 🌿 LEFT SIDE - Info (Text only, Logo removed) */}
-          <div className="space-y-4">
-            {/* Logo ki jagah sirf Text */}
-            <div className="flex items-center gap-3">
-              <span className="text-4xl">🌿</span>
-              <h2 className="font-serif font-bold text-3xl leading-tight">SDF</h2>
-            </div>
+          {/* 🌿 LEFT SIDE - Updated Text Style */}
+          <div className="space-y-6 flex flex-col justify-start">
+            {/* Logo/Heading section removed as requested */}
             
-            <p className="text-white/80 text-sm leading-relaxed max-w-sm">
-              Empowering communities and sustaining the future through
+            <p className="text-white/90 text-lg md:text-xl italic leading-relaxed max-w-sm text-left font-serif">
+              "Empowering communities and sustaining the future through
               integrated development programs across health, education, and
-              environment.
+              environment."
             </p>
 
             <div className="flex space-x-4 pt-2">
-              <a className="bg-white/10 w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
+              <a href="#" className="bg-white/10 w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
                 f
               </a>
-              <a className="bg-white/10 w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
+              <a href="#" className="bg-white/10 w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
                 𝕏
               </a>
-              <a className="bg-white/10 w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
+              <a href="#" className="bg-white/10 w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
                 in
               </a>
             </div>
@@ -38,11 +34,11 @@ const Footer = () => {
           <div className="md:pl-10">
             <h4 className="text-lg font-bold mb-5 border-b-2 border-accent w-fit pb-1">Quick Links</h4>
             <ul className="space-y-3 text-sm">
-              <li><Link to="/about" className="hover:text-accent">About Us</Link></li>
-              <li><Link to="/programs" className="hover:text-accent">Our Programs</Link></li>
-              <li><Link to="/projects" className="hover:text-accent">Ongoing Projects</Link></li>
-              <li><Link to="/impact" className="hover:text-accent">Impact & Evidence</Link></li>
-              <li><Link to="/contact" className="hover:text-accent">Contact Us</Link></li>
+              <li><Link to="/about" className="hover:text-accent transition-colors">About Us</Link></li>
+              <li><Link to="/programs" className="hover:text-accent transition-colors">Our Programs</Link></li>
+              <li><Link to="/projects" className="hover:text-accent transition-colors">Ongoing Projects</Link></li>
+              <li><Link to="/impact" className="hover:text-accent transition-colors">Impact & Evidence</Link></li>
+              <li><Link to="/contact" className="hover:text-accent transition-colors">Contact Us</Link></li>
             </ul>
           </div>
 

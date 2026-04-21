@@ -12,6 +12,12 @@ import ProjectSlider from "../components/ProjectSlider";
 const PROGRAMS_API_URL = `${API_BASE_URL}/programs.php?t=` + Date.now();
 const SUBSCRIBE_API_URL = `${API_BASE_URL}/subscribe.php`;
 
+// 🔥 Added Video Checker Helper
+const isVideoFile = (url) => {
+  if (!url) return false;
+  return /\.(mp4|webm|ogg)$/i.test(url);
+};
+
 const makeImageUrl = (path) => {
   if (!path) return "https://via.placeholder.com/800x500?text=No+Image";
 
@@ -48,30 +54,27 @@ const Home = () => {
   const [programsError, setProgramsError] = useState("");
 
   const [focusAreas, setFocusAreas] = useState([]);
-
-
-  // 🔥 ADD IT RIGHT HERE:
   const [selectedMapState, setSelectedMapState] = useState(null);
 
-// Map Animation hooks
+  const [aboutData, setAboutData] = useState(null);
+  
+  // 🔥 NEW: State for the recent 3 projects
+  const [recentProjects, setRecentProjects] = useState([]);
+
+  // Map Animation hooks
   const mapRef = useRef(null);
   
   const { scrollYProgress } = useScroll({
     target: mapRef,
-    // 🔥 Changed to "start 90%": This makes the animation trigger EARLIER (higher up on the screen)
     offset: ["start 90%", "center center"],
   });
 
-  // 🔥 Removed the delay (starts at 0 instead of 0.4) so it zooms smoothly right away.
-  // Starts at 0.6 scale so the map of India fits perfectly in the frame.
   const mapScale = useTransform(
     scrollYProgress, 
     [0, 0.7, 1], 
     [0.6, 0.85, 1]
   );
   
-  // 🔥 Starts with a MUCH bigger circle (40%) so the map isn't cut off!
-  // It grows to 60%, then rapidly bursts to 150% to fill the rectangle.
   const mapClipPercentage = useTransform(
     scrollYProgress, 
     [0, 0.7, 1], 
@@ -143,8 +146,36 @@ const Home = () => {
       }
     };
 
+    const fetchAboutData = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/about_who_we_are.php?t=${Date.now()}`);
+        const data = await response.json();
+        if (data.status === "success" && data.data) {
+          setAboutData(data.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch about data:", err);
+      }
+    };
+
+    // 🔥 NEW: Fetch recent 3 projects
+    const fetchRecentProjects = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/projects.php?t=${Date.now()}`);
+        const data = await response.json();
+        if (data.status === 'success' && Array.isArray(data.data)) {
+          // Grab only the first 3 projects
+          setRecentProjects(data.data.slice(0, 3));
+        }
+      } catch (err) {
+        console.error("Failed to fetch recent projects:", err);
+      }
+    };
+
     fetchPrograms();
     fetchFocusAreas();
+    fetchAboutData(); 
+    fetchRecentProjects(); // Trigger the fetch
   }, []);
 
   const handleSubscribe = async (e) => {
@@ -203,13 +234,13 @@ const Home = () => {
                 </h2>
               </div>
 
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                Duis eterueh voie roiar ma inots elitrum velite ne cuolestieru
-                cuigiatat llvoneaglut excepteur cillum dolore eua protert it.
-                augait noes parrat teilisuntials idupiliees ipum.
+              <p className="text-gray-600 mb-6 leading-relaxed line-clamp-8">
+                {aboutData && aboutData.who_we_are_text
+                  ? aboutData.who_we_are_text
+                  : "Established in 2014 by a dedicated group of professional social workers, the Sustainable Development Foundation (SDF) is a distinguished autonomous and 'not-for-profit' organization in India..."}
               </p>
 
-              <ul className="space-y-3 mb-8">
+              {/* <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-3 shrink-0"></span>
                   <span className="text-gray-600 text-sm">
@@ -222,7 +253,7 @@ const Home = () => {
                     Uit fanlis sed dolem frigiats mulit zooflaits veilles
                   </span>
                 </li>
-              </ul>
+              </ul> */}
 
               <Link to="/about">
                 <button className="bg-primary hover:bg-[#5a6425] text-white px-8 py-2.5 rounded-full font-medium transition-colors">
@@ -232,50 +263,57 @@ const Home = () => {
             </div>
 
             <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                {
-                  title: "Water Conservation",
-                  info: "Lorem ipsum dolor sit amet ociae idu ailsing elit, sed dini net gamtz.",
-                  img: "about/6.png",
-                },
-                {
-                  title: "Sustainable Agriculture",
-                  info: "Lorem ipsum dolor sit amet ociae idu ailsing elit, sed dini net gamtz.",
-                  img: "about/3.png",
-                },
-                {
-                  title: "Community Development",
-                  info: "Lorem ipsum dolor sit amet ociae idu ailsing elit, sed dini net gamtz.",
-                  img: "about/5.png",
-                },
-              ].map((card, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white rounded-2xl shadow-sm text-center border border-gray-100 pb-6 flex flex-col h-full hover:shadow-md transition-shadow"
-                >
-                  <div className="p-4">
-                    <img
-                      src={card.img}
-                      alt={card.title}
-                      className="w-full h-32 object-cover rounded-xl shadow-sm"
-                      onError={(e) => {
-                        e.currentTarget.src =
-                          "https://via.placeholder.com/500x300?text=Image+Not+Found";
-                      }}
-                    />
-                  </div>
+              {/* 🔥 UPDATED: Mapping over dynamic projects instead of static cards */}
+              {recentProjects.length > 0 ? (
+                recentProjects.map((project, idx) => (
+                  <div
+                    key={project.id || idx}
+                    className="bg-white rounded-2xl shadow-sm text-center border border-gray-100 pb-6 flex flex-col h-full hover:shadow-md transition-shadow"
+                  >
+                    <div className="p-4 h-40"> {/* Fixed height to keep cards aligned */}
+                      {isVideoFile(project.image_url) ? (
+                        <video
+                          src={`${ADMIN_BASE_URL}${project.image_url?.replace(/^\/+/, '')}`}
+                          className="w-full h-full object-cover rounded-xl shadow-sm"
+                          autoPlay loop muted playsInline
+                        />
+                      ) : (
+                        <img
+                          src={`${ADMIN_BASE_URL}${project.image_url?.replace(/^\/+/, '')}`}
+                          alt={project.title}
+                          className="w-full h-full object-cover rounded-xl shadow-sm"
+                          onError={(e) => {
+                            e.currentTarget.src =
+                              "https://via.placeholder.com/500x300?text=Image+Not+Found";
+                          }}
+                        />
+                      )}
+                    </div>
 
-                  <div className="p-5 grow flex flex-col">
-                    <h3 className="text-xl font-serif text-text-primary mb-3">
-                      {card.title}
-                    </h3>
-                    <p className="text-gray-500 text-sm mb-6 grow">
-                      {card.info}
-                    </p>
-
+                    <div className="p-5 grow flex flex-col">
+                      {/* Truncated title to ensure it doesn't break layout */}
+                      <h3 className="text-xl font-serif text-text-primary mb-3 line-clamp-2">
+                        {project.title}
+                      </h3>
+                      {/* Truncated description */}
+                      <p className="text-gray-500 text-sm mb-6 grow line-clamp-3">
+                        {project.description}
+                      </p>
+                      
+                      <Link 
+                        to={`/projectdetails/${project.slug}`}
+                        className="text-primary font-bold text-sm hover:underline mt-auto"
+                      >
+                        View Project →
+                      </Link>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="col-span-3 text-center text-gray-500 py-10">
+                  Loading recent projects...
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -324,8 +362,6 @@ const Home = () => {
           </div>
         </motion.div>
       </section>
-
-
 
       <ProjectSlider />
 
@@ -455,7 +491,6 @@ const Home = () => {
         </div>
       </section>
 
-
       <section className="py-16 bg-bg-color">
         <div className="max-w-7xl mx-auto px-4">
 
@@ -463,11 +498,7 @@ const Home = () => {
             Our Grassroots Presence
           </h2>
 
-          {/* 🔥 MAIN LAYOUT */}
-         {/* 🔥 MAIN LAYOUT */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-
-            {/* 🗺️ MAP (LEFT - bigger) */}
             <div ref={mapRef} className="lg:col-span-2 relative h-150 md:h-200 flex items-center justify-center bg-transparent">
               <motion.div
                 style={{
@@ -483,31 +514,19 @@ const Home = () => {
                 }}
                 className="bg-accent rounded-xl overflow-hidden shadow-lg"
               >
-                {/* 🔥 Pass the state setter to the Map */}
                 <MapSection onStateSelect={setSelectedMapState} />
               </motion.div>
             </div>
 
-            {/* 📊 DYNAMIC SIDEBAR (RIGHT) */}
             <div id="impact" className="bg-white sticky top-24  rounded-xl shadow-sm border border-gray-100 p-8 min-h-112.5">
-              
-              {/* IF A STATE IS CLICKED, SHOW ITS PROJECTS */}
               {selectedMapState ? (
                 <div>
-
-
-                <h3 className="text-xl font-serif font-bold text-text-primary mb-6 flex items-center gap-2">
+                  <h3 className="text-xl font-serif font-bold text-text-primary mb-6 flex items-center gap-2">
                     <span className="text-2xl mr-2">📊</span> Impact Snapshot
                   </h3>
-
-                    <br />
-
-
+                  <br />
                   <div className="flex items-center justify-between mb-6 border-b border-gray-100 pb-4">
-                  
-                    
                     <h4 className="text-2xl font-serif font-bold text-text-primary flex items-center">
-                    
                       <span className="text-2xl mr-2">📍State:- </span> {selectedMapState.name}
                     </h4>
                     <button 
@@ -541,58 +560,40 @@ const Home = () => {
                     </div>
                   )}
                 </div>
-
               ) : (
-                /* OTHERWISE, SHOW DEFAULT IMPACT SNAPSHOT */
                 <div>
                   <h3 className="text-xl font-serif font-bold text-text-primary mb-6 flex items-center gap-2">
                     <span className="text-2xl mr-2">📊</span> Impact Snapshot
                   </h3>
-
                   <ul className="space-y-6">
                     <li className="border-b pb-4">
                       <div className="text-3xl font-bold text-primary mb-1">12</div>
                       <div className="text-sm text-gray-600 uppercase tracking-wide">States Covered</div>
                     </li>
-
                     <li className="border-b pb-4">
                       <div className="text-3xl font-bold text-secondary mb-1">45</div>
                       <div className="text-sm text-gray-600 uppercase tracking-wide">Districts Operated In</div>
                     </li>
-
                     <li className="border-b pb-4">
                       <div className="text-3xl font-bold text-accent mb-1">15+</div>
                       <div className="text-sm text-gray-600 uppercase tracking-wide">Active Major Projects</div>
                     </li>
-
                     <li>
                       <div className="text-3xl font-bold text-primary mb-1">2M+</div>
                       <div className="text-sm text-gray-600 uppercase tracking-wide">Beneficiaries Reached</div>
                     </li>
                   </ul>
-                  
                   <div className="mt-8 pt-4 border-t border-gray-100 text-center">
                     <p className="text-xs text-gray-400 italic">👆 Click any highlighted state on the map to view local projects.</p>
                   </div>
                 </div>
               )}
             </div>
-            
           </div>
-
         </div>
       </section>
 
-
-
-
       <PartnersSection />
-
-
-
-
-
-
 
       <section className="py-10 bg-primary/10 border-t border-primary/20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

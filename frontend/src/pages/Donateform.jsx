@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "react-qr-code";
-import { API_BASE_URL, ADMIN_BASE_URL } from "../config";
-
+import { API_BASE_URL } from "../config";
 
 export default function DonationForm() {
   const initialFormData = {
@@ -16,8 +15,8 @@ export default function DonationForm() {
     pan_number: "",
   };
 
-  const PAYMENT_TIME_LIMIT = 60; // 60 seconds
-  const RESET_DELAY = 3000; // 3 seconds
+  const PAYMENT_TIME_LIMIT = 120; // 2 minutes for better UX
+  const RESET_DELAY = 4000;
 
   const [showPan, setShowPan] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
@@ -36,30 +35,22 @@ export default function DonationForm() {
 
   const upiId = "9709544166@ybl";
   const payeeName = "SDF Trust";
-  const transactionNote = "Donation for children support";
 
-  const CREATE_DONATION_API =
-    "http://localhost/sdftrust/backend/api/create-donation.php";
-  const CHECK_STATUS_API =
-    "http://localhost/sdftrust/backend/api/check-payment-status.php";
-  const EXPIRE_PAYMENT_API =
-    "http://localhost/sdftrust/backend/api/expire-payment.php";
+  // Using API_BASE_URL from config
+  const CREATE_DONATION_API = `${API_BASE_URL}/create-donation.php`;
+  const CHECK_STATUS_API = `${API_BASE_URL}/check-payment-status.php`;
+  const EXPIRE_PAYMENT_API = `${API_BASE_URL}/expire-payment.php`;
 
-  const createUpiUrl = ({ upiId, payeeName, amount, note, transactionId }) => {
+  const createUpiUrl = ({ upiId, payeeName, amount, transactionId }) => {
     const params = new URLSearchParams({
       pa: upiId,
       pn: payeeName,
       am: String(amount),
       cu: "INR",
-      tn: `${note} ${transactionId}`,
+      tn: `Donation ${transactionId}`,
     });
-
     return `upi://pay?${params.toString()}`;
   };
-
-  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const validatePhone = (phone) => /^[6-9]\d{9}$/.test(phone);
-  const validatePAN = (pan) => /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan);
 
   const clearAllTimers = () => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -81,97 +72,56 @@ export default function DonationForm() {
     setResponseMsg("");
   };
 
-  // Payment screen close karega, but form data preserve rahega
   const backToFormOnly = async () => {
-    clearAllTimers();
-
     if (transactionId && !paymentSuccess) {
       await markExpired(transactionId);
     }
-
-    setSavedData(null);
+    clearAllTimers();
     setShowPayment(false);
-    setPaymentSuccess(false);
     setTransactionId("");
-    setTimeLeft(PAYMENT_TIME_LIMIT);
-    setIsCreatingDonation(false);
-    setIsCheckingStatus(false);
     setResponseMsg("");
   };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : name === "pan_number"
-            ? value.toUpperCase()
-            : value,
+      [name]: type === "checkbox" ? checked : name === "pan_number" ? value.toUpperCase() : value,
     }));
-
-    if (name === "wants_80g") {
-      setShowPan(checked);
-
-      if (!checked) {
-        setFormData((prev) => ({
-          ...prev,
-          wants_80g: false,
-          pan_number: "",
-        }));
-      }
-    }
+    if (name === "wants_80g") setShowPan(checked);
   };
 
   const markExpired = async (txnId) => {
     try {
       await fetch(EXPIRE_PAYMENT_API, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transaction_id: txnId }),
       });
     } catch (error) {
-      console.error("Expire API error:", error);
+      console.error("Expiry error:", error);
     }
   };
 
   const checkPaymentStatus = async (txnId) => {
-    if (!txnId) return;
-
+    if (!txnId || paymentSuccess) return;
     try {
       setIsCheckingStatus(true);
-
-      const res = await fetch(
-        `${CHECK_STATUS_API}?transaction_id=${encodeURIComponent(txnId)}`
-      );
+      const res = await fetch(`${CHECK_STATUS_API}?transaction_id=${encodeURIComponent(txnId)}`);
       const data = await res.json();
 
-      if (!data.success) return;
-
-      if (data.payment_status === "success") {
+      if (data.status === "approved" || data.payment_status === "success") {
         clearAllTimers();
         setPaymentSuccess(true);
-        setResponseMsg("Successful payment");
-
-        resetRef.current = setTimeout(() => {
-          resetToForm();
-        }, RESET_DELAY);
-      }
-
-      if (data.payment_status === "expired") {
+        setResponseMsg("✅ Donation Verified Successfully!");
+        resetRef.current = setTimeout(resetToForm, RESET_DELAY);
+      } else if (data.payment_status === "expired") {
         clearAllTimers();
-        setResponseMsg("QR expired. Please try again.");
-
-        resetRef.current = setTimeout(() => {
-          resetToForm();
-        }, 3000);
+        setResponseMsg("❌ QR Expired. Please try again.");
+        resetRef.current = setTimeout(resetToForm, 3000);
       }
     } catch (error) {
-      console.error("Status check error:", error);
+      console.error("Status poll error:", error);
     } finally {
       setIsCheckingStatus(false);
     }
@@ -179,98 +129,56 @@ export default function DonationForm() {
 
   const startCountdownAndPolling = (txnId) => {
     setTimeLeft(PAYMENT_TIME_LIMIT);
-
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          clearInterval(timerRef.current);
-          clearInterval(pollRef.current);
+          clearAllTimers();
           markExpired(txnId);
-          setResponseMsg("QR expired. Please try again.");
-
-          resetRef.current = setTimeout(() => {
-            resetToForm();
-          }, 3000);
-
+          setResponseMsg("⚠️ Time out. QR has expired.");
+          resetRef.current = setTimeout(resetToForm, 3000);
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
 
-    pollRef.current = setInterval(() => {
-      checkPaymentStatus(txnId);
-    }, 3000);
+    pollRef.current = setInterval(() => checkPaymentStatus(txnId), 4000);
   };
 
   const handleSaveInformation = async (e) => {
     e.preventDefault();
     setResponseMsg("");
-
-    if (!validateEmail(formData.email)) {
-      setResponseMsg("Please enter a valid email address.");
-      return;
-    }
-
-    if (!validatePhone(formData.phone)) {
-      setResponseMsg("Please enter a valid 10-digit Indian phone number.");
-      return;
-    }
-
-    if (!formData.donation_amount || Number(formData.donation_amount) <= 0) {
-      setResponseMsg("Please enter a valid donation amount.");
-      return;
-    }
-
-    if (formData.wants_80g && !validatePAN(formData.pan_number)) {
-      setResponseMsg("Please enter a valid PAN number.");
-      return;
-    }
+    setIsCreatingDonation(true);
 
     try {
-      setIsCreatingDonation(true);
-
       const res = await fetch(CREATE_DONATION_API, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       const data = await res.json();
-
       if (data.success) {
         setSavedData(formData);
         setTransactionId(data.transaction_id);
         setShowPayment(true);
-        setPaymentSuccess(false);
         startCountdownAndPolling(data.transaction_id);
       } else {
-        setResponseMsg(data.message || "Unable to start payment.");
+        setResponseMsg(data.message || "Initialization failed.");
       }
     } catch (error) {
-      setResponseMsg("Something went wrong while starting payment.");
-      console.error(error);
+      setResponseMsg("Network error. Please try again.");
     } finally {
       setIsCreatingDonation(false);
     }
   };
 
-  useEffect(() => {
-    return () => {
-      clearAllTimers();
-    };
-  }, []);
-
   const upiUrl = useMemo(() => {
     if (!savedData?.donation_amount || !transactionId) return "";
-
     return createUpiUrl({
       upiId,
       payeeName,
       amount: savedData.donation_amount,
-      note: transactionNote,
       transactionId,
     });
   }, [savedData, transactionId]);
@@ -278,248 +186,99 @@ export default function DonationForm() {
   const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
   const seconds = String(timeLeft % 60).padStart(2, "0");
 
-  return (
-    <div className="max-w-6xl mx-auto mt-8 p-6 bg-white rounded-xl shadow-md">
-      <h2 className="text-2xl font-bold mb-2">
-        Empower Children Through Music, Education, And Dignity
-      </h2>
+  useEffect(() => {
+    return () => clearAllTimers();
+  }, []);
 
-      <p className="text-gray-500 mb-6">
-        Empowering underprivileged children through music, education, and
-        cultural care.
-      </p>
+  return (
+    <div className="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-3xl shadow-2xl border border-gray-100">
+      <div className="mb-8">
+        <h2 className="text-3xl font-serif font-bold text-[#6a752b] mb-2">Support SDF Trust</h2>
+        <p className="text-gray-500 italic">"Your contribution makes a direct impact on underprivileged lives."</p>
+      </div>
 
       {responseMsg && (
-        <div
-          className={`mb-4 rounded-lg px-4 py-3 text-sm font-medium ${
-            paymentSuccess
-              ? "bg-green-100 text-green-700 border border-green-300"
-              : "bg-gray-100 text-gray-700 border border-gray-200"
-          }`}
-        >
-          <p>{responseMsg}</p>
-          {transactionId && paymentSuccess && (
-            <p className="mt-1 font-semibold">Transaction ID: {transactionId}</p>
-          )}
+        <div className={`mb-6 p-4 rounded-xl text-center font-bold ${paymentSuccess ? "bg-green-100 text-green-700 border border-green-200" : "bg-red-50 text-red-700 border border-red-100"}`}>
+          {responseMsg}
         </div>
       )}
 
       {!showPayment ? (
-        <form className="space-y-4" onSubmit={handleSaveInformation}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              type="text"
-              name="first_name"
-              placeholder="First Name"
-              className="w-full border rounded-lg px-4 py-3"
-              value={formData.first_name}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="text"
-              name="last_name"
-              placeholder="Last Name"
-              className="w-full border rounded-lg px-4 py-3"
-              value={formData.last_name}
-              onChange={handleChange}
-              required
-            />
+        <form className="space-y-5" onSubmit={handleSaveInformation}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <input type="text" name="first_name" placeholder="First Name" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#6a752b] outline-none" value={formData.first_name} onChange={handleChange} required />
+            <input type="text" name="last_name" placeholder="Last Name" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#6a752b] outline-none" value={formData.last_name} onChange={handleChange} required />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              type="email"
-              name="email"
-              placeholder="Your Email"
-              className="w-full border rounded-lg px-4 py-3"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="text"
-              name="phone"
-              placeholder="Your Number"
-              className="w-full border rounded-lg px-4 py-3"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <input type="email" name="email" placeholder="Email Address" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#6a752b] outline-none" value={formData.email} onChange={handleChange} required />
+            <input type="text" name="phone" placeholder="Phone Number" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#6a752b] outline-none" value={formData.phone} onChange={handleChange} required />
           </div>
 
-          <input
-            type="number"
-            name="donation_amount"
-            placeholder="Donation Amount"
-            className="w-full border rounded-lg px-4 py-3"
-            value={formData.donation_amount}
-            onChange={handleChange}
-            required
-            min="1"
-          />
-
-          <div className="flex flex-wrap gap-3">
-            {[100, 500, 1000, 2000].map((amount) => (
-              <button
-                key={amount}
-                type="button"
-                onClick={() =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    donation_amount: String(amount),
-                  }))
-                }
-                className="px-4 py-2 rounded-full border border-yellow-400 bg-yellow-50 hover:bg-yellow-100 text-sm font-medium"
-              >
-                ₹{amount}
-              </button>
-            ))}
+          <div className="space-y-3">
+            <input type="number" name="donation_amount" placeholder="Enter Amount (₹)" className="w-full border-2 border-[#6a752b]/20 rounded-xl px-4 py-4 text-xl font-bold focus:border-[#6a752b] outline-none" value={formData.donation_amount} onChange={handleChange} required min="1" />
+            <div className="flex flex-wrap gap-3">
+              {[500, 1000, 2000, 5000].map((amount) => (
+                <button key={amount} type="button" onClick={() => setFormData(p => ({ ...p, donation_amount: String(amount) }))} className="px-5 py-2 rounded-full border border-gray-200 hover:bg-[#6a752b] hover:text-white transition-colors text-sm font-bold">₹{amount}</button>
+              ))}
+            </div>
           </div>
 
-          <input
-            type="text"
-            name="address"
-            placeholder="Your Address"
-            className="w-full border rounded-lg px-4 py-3"
-            value={formData.address}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" name="address" placeholder="Residential Address" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#6a752b] outline-none" value={formData.address} onChange={handleChange} required />
 
-          <textarea
-            name="message"
-            placeholder="Your message..."
-            className="w-full border rounded-lg px-4 py-3 h-32 resize-none"
-            value={formData.message}
-            onChange={handleChange}
-          ></textarea>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="wants_80g"
-              checked={formData.wants_80g}
-              onChange={handleChange}
-            />
-            <label>Check here if you want 80G Tax Redemption</label>
+          <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+            <input type="checkbox" name="wants_80g" id="80g" className="w-5 h-5 accent-[#6a752b]" checked={formData.wants_80g} onChange={handleChange} />
+            <label htmlFor="80g" className="text-sm font-semibold text-gray-700 cursor-pointer">I want an 80G Tax Exemption Receipt</label>
           </div>
 
           {showPan && (
-            <input
-              type="text"
-              name="pan_number"
-              placeholder="Your PAN Number"
-              maxLength={10}
-              className="w-full border rounded-lg px-4 py-3"
-              value={formData.pan_number}
-              onChange={handleChange}
-              required
-            />
+            <input type="text" name="pan_number" placeholder="Enter 10-digit PAN Number" maxLength={10} className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#6a752b] outline-none font-mono" value={formData.pan_number} onChange={handleChange} required />
           )}
 
-          <button
-            type="submit"
-            disabled={isCreatingDonation}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-3 rounded-full transition disabled:opacity-50"
-          >
-            {isCreatingDonation ? "Please wait..." : "Donate Now →"}
+          <button type="submit" disabled={isCreatingDonation} className="w-full bg-[#6a752b] hover:bg-[#5a6425] text-white font-bold py-4 rounded-full transition shadow-lg text-lg">
+            {isCreatingDonation ? "Initializing Payment..." : "Generate Payment QR →"}
           </button>
         </form>
       ) : (
-        <div className="text-center space-y-6">
-          <h3 className="text-xl font-bold">Complete Your Donation Payment</h3>
-
+        <div className="text-center py-5 space-y-6 animate-fade-in">
           {!paymentSuccess && (
-            <div className="mx-auto max-w-md rounded-full bg-red-50 border border-red-200 px-4 py-2 text-red-700 font-semibold">
-              Time Left: {minutes}:{seconds}
+            <div className="inline-block bg-red-50 text-red-600 px-6 py-2 rounded-full font-mono font-bold border border-red-100">
+              QR Expires in: {minutes}:{seconds}
             </div>
           )}
 
-          <div className="relative bg-gray-50 border rounded-xl p-6 max-w-md mx-auto">
-            {!paymentSuccess && (
-              <button
-                type="button"
-                onClick={backToFormOnly}
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 font-bold text-lg flex items-center justify-center"
-                aria-label="Close payment"
-                title="Close payment"
-              >
-                ×
-              </button>
-            )}
-
-            <p className="text-lg font-semibold mb-2">
-              Donation Amount: ₹{savedData?.donation_amount}
-            </p>
-
-            {!paymentSuccess && (
+          <div className="relative p-6 bg-white border-4 border-[#6a752b] rounded-[2rem] inline-block shadow-2xl">
+            {!paymentSuccess ? (
               <>
-                <p className="text-sm text-gray-500 mb-4">
-                  Scan this QR code using any UPI app
-                </p>
-
-                {upiUrl && (
-                  <div className="bg-white p-4 inline-block rounded-xl border shadow-sm">
-                    <QRCode value={upiUrl} size={220} />
-                  </div>
-                )}
-
-                <div className="mt-4 text-sm text-gray-600 break-all space-y-1">
-                  <p>
-                    <span className="font-semibold">UPI ID:</span> {upiId}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Transaction ID:</span>{" "}
-                    {transactionId}
-                  </p>
+                <div className="mb-4">
+                    <p className="text-lg font-bold text-gray-800">Scan to Pay: ₹{savedData?.donation_amount}</p>
+                    <p className="text-xs text-gray-400">Transaction ID: {transactionId}</p>
                 </div>
-
-                {upiUrl && (
-                  <a
-                    href={upiUrl}
-                    className="mt-4 inline-block px-6 py-3 rounded-full bg-green-600 text-white hover:bg-green-700 transition"
-                  >
-                    Pay with UPI App
-                  </a>
-                )}
-
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    onClick={backToFormOnly}
-                    className="px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
-                  >
-                    Cancel Payment
-                  </button>
+                <QRCode value={upiUrl} size={220} />
+                <div className="mt-6 flex flex-col gap-3">
+                    <a href={upiUrl} className="bg-green-600 text-white px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-green-700 transition">
+                        📱 Open UPI App
+                    </a>
+                    <button onClick={backToFormOnly} className="text-gray-400 text-sm underline hover:text-red-500">
+                        Cancel and Edit Form
+                    </button>
                 </div>
-
-                <p className="mt-4 text-xs text-gray-500">
-                  Payment status is being checked automatically...
-                </p>
-
-                {isCheckingStatus && (
-                  <p className="mt-2 text-xs text-blue-600">
-                    Checking payment status...
-                  </p>
-                )}
               </>
-            )}
-
-            {paymentSuccess && (
-              <div className="py-6">
-                <p className="text-2xl font-bold text-green-600">
-                  Successful payment
-                </p>
-                <p className="mt-2 text-sm text-gray-600">
-                  Redirecting to donation form...
-                </p>
-                <p className="mt-2 font-semibold">
-                  Transaction ID: {transactionId}
-                </p>
+            ) : (
+              <div className="py-10 px-5 text-center">
+                <div className="text-6xl mb-4">🎉</div>
+                <h3 className="text-2xl font-bold text-[#6a752b]">Payment Successful!</h3>
+                <p className="text-gray-500 mt-2">Thank you for your kindness.</p>
               </div>
             )}
           </div>
+
+          {!paymentSuccess && (
+            <div className="flex flex-col items-center gap-2">
+                <div className="w-2 h-2 bg-[#6a752b] rounded-full animate-ping"></div>
+                <p className="text-sm text-gray-400 italic">Waiting for payment verification from admin...</p>
+            </div>
+          )}
         </div>
       )}
     </div>

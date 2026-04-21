@@ -2,40 +2,19 @@ import { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { API_BASE_URL, ADMIN_BASE_URL } from "../config";
 
-const staticFunds = [
-  {
-    id: 1,
-    title: "Community Development Fund",
-    description:
-      "Support our grassroots initiatives empowering local communities and restoring critical rural infrastructure.",
-    location: "Pan-India",
-    donate_link: "/donate",
-  },
-  {
-    id: 2,
-    title: "Emergency Water Relief Fund",
-    description:
-      "Provide immediate assistance to drought-affected regions by funding water pipelines and resources.",
-    location: "Affected Regions",
-    donate_link: "/donate",
-  },
-  {
-    id: 3,
-    title: "Women's Education Endowment",
-    description:
-      "Fund full-ride scholarships for girls in marginalized communities to pursue vocational and higher education.",
-    location: "Urban & Rural Centers",
-    donate_link: "/donate",
-  },
-];
-
 const GetInvolved = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("volunteer");
+  
+  // States for Careers
   const [careersList, setCareersList] = useState([]);
   const [careersLoading, setCareersLoading] = useState(true);
 
-  // Handle URL hash navigation (e.g., /get-involved#careers)
+  // States for Funds (Partners EOI/RFQ)
+  const [fundsList, setFundsList] = useState([]);
+  const [fundsLoading, setFundsLoading] = useState(true);
+
+  // Handle URL hash navigation (e.g., /get-involved#funds)
   useEffect(() => {
     if (location.hash) {
       const targetTab = location.hash.replace("#", "");
@@ -53,81 +32,91 @@ const GetInvolved = () => {
     }
   }, [location.hash]);
 
+  // Fetch Data from APIs
   useEffect(() => {
-    const fetchCareers = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/careers.php`);
-        const data = await response.json();
-        if (data.status === "success") {
-          setCareersList(data.data);
+        // Fetch Careers
+        const careerRes = await fetch(`${API_BASE_URL}/careers.php`);
+        const careerData = await careerRes.json();
+        if (careerData.status === "success") {
+          setCareersList(careerData.data);
+        }
+
+        // Fetch Funds (Partners EOI/RFQ)
+        const fundRes = await fetch(`${API_BASE_URL}/funds.php`);
+        const fundData = await fundRes.json();
+        if (fundData.status === "success") {
+          setFundsList(fundData.data);
         }
       } catch (error) {
-        console.error("Failed to fetch careers:", error);
+        console.error("Data fetching error:", error);
       } finally {
         setCareersLoading(false);
+        setFundsLoading(false);
       }
     };
-    fetchCareers();
+
+    fetchData();
   }, []);
 
   return (
     <div className="bg-bg-color min-h-screen pb-24 relative">
+      {/* Hero Section */}
       <section className="bg-secondary text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
             Get Involved
           </h1>
-          <p className="text-xl max-w-2xl mx-auto">
+          <p className="text-xl max-w-2xl mx-auto opacity-90">
             Be a part of our movement. There are many ways to contribute your
             time, skills, and passion.
           </p>
         </div>
       </section>
 
-      {/* Navigation Tabs */}
-      {/* Navigation Tabs */}
-<section className="border-b border-gray-200 sticky top-20 bg-white z-40">
-  <div className="max-w-4xl mx-auto px-4">
-    <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8">
-      {[
-        { id: "volunteer", label: "Volunteer With Us", icon: "🤝", path: null },
-        { id: "careers", label: "Careers", icon: "💼", path: null },
-        { id: "funds", label: "Partners (EOI/RFQ)", icon: "🌱", path: null },
-        { id: "contact", label: "Contact Us", icon: "📞", path: "/contact" }, // lowercase 'id' rakhein
-      ].map((tab) => {
-        const isLink = tab.path !== null;
-        const baseClass = `py-4 px-1 flex items-center gap-2 border-b-2 font-bold transition-all text-sm md:text-base ${
-          activeTab === tab.id
-            ? "border-primary text-primary"
-            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-        }`;
+      {/* Sticky Navigation Tabs */}
+      <section className="border-b border-gray-200 sticky top-20 bg-white z-40 shadow-sm">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8">
+            {[
+              { id: "volunteer", label: "Volunteer With Us", icon: "🤝", path: null },
+              { id: "careers", label: "Careers", icon: "💼", path: null },
+              { id: "funds", label: "Partners (EOI/RFQ)", icon: "🌱", path: null },
+              { id: "contact", label: "Contact Us", icon: "📞", path: "/contact" },
+            ].map((tab) => {
+              const isLink = tab.path !== null;
+              const baseClass = `py-4 px-1 flex items-center gap-2 border-b-2 font-bold transition-all text-sm md:text-base ${
+                activeTab === tab.id
+                  ? "border-primary text-primary"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              }`;
 
-        // Agar path hai toh React Router ka Link use karein
-        if (isLink) {
-          return (
-            <Link key={tab.id} to={tab.path} className={baseClass}>
-              <span>{tab.icon}</span> {tab.label}
-            </Link>
-          );
-        }
+              if (isLink) {
+                return (
+                  <Link key={tab.id} to={tab.path} className={baseClass}>
+                    <span>{tab.icon}</span> {tab.label}
+                  </Link>
+                );
+              }
 
-        // Warna normal tab button
-        return (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={baseClass}
-          >
-            <span>{tab.icon}</span> {tab.label}
-          </button>
-        );
-      })}
-    </div>
-  </div>
-</section>
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={baseClass}
+                >
+                  <span>{tab.icon}</span> {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 min-h-[50vh]">
-        {/* Volunteer */}
+        
+        {/* --- VOLUNTEER SECTION --- */}
         {activeTab === "volunteer" && (
           <section id="volunteer" className="mb-24 scroll-mt-32">
             <div className="flex flex-col md:flex-row gap-12 items-center">
@@ -137,7 +126,7 @@ const GetInvolved = () => {
                   alt="Volunteer"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-primary/80 to-transparent flex items-end p-8">
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex items-end p-8">
                   <h2 className="text-4xl text-white font-serif font-bold tracking-wide">
                     Volunteer With Us
                   </h2>
@@ -145,24 +134,8 @@ const GetInvolved = () => {
               </div>
               <div className="w-full md:w-1/2 space-y-6">
                 <p className="text-gray-600 text-lg leading-relaxed">
-                  Volunteering is the ultimate exercise in democracy. You vote
-                  in elections once a year, but when you volunteer, you vote
-                  every day about the kind of community you want to live in.
-                  Join our grassroots programs and make a tangible difference on
-                  the ground. Lorem, ipsum dolor sit amet consectetur
-                  adipisicing elit. Consequuntur dolorem culpa esse distinctio
-                  voluptates porro nisi nihil corrupti eum commodi
-                  exercitationem ut maiores deleniti, minus sapiente accusantium
-                  assumenda tempore accusamus.
+                  Volunteering is the ultimate exercise in democracy. Join our grassroots programs and make a tangible difference on the ground. We offer both field-based and remote skill-sharing opportunities.
                 </p>
-                {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                     <div className="bg-white p-4 rounded border border-gray-100 shadow-sm flex items-center gap-3">
-                       <span className="text-2xl">🌱</span> <span className="font-bold text-text-primary">Field Volunteer</span>
-                     </div>
-                     <div className="bg-white p-4 rounded border border-gray-100 shadow-sm flex items-center gap-3">
-                       <span className="text-2xl">💻</span> <span className="font-bold text-text-primary">Remote Skill-Based</span>
-                     </div>
-                  </div> */}
                 <Link
                   to="/volunteerform"
                   className="bg-primary hover:bg-[#5a6425] text-white px-8 py-4 rounded-full font-bold shadow-md hover:-translate-y-1 transition-all mt-6 inline-block"
@@ -174,107 +147,78 @@ const GetInvolved = () => {
           </section>
         )}
 
-        {/* Careers */}
+        {/* --- CAREERS SECTION --- */}
         {activeTab === "careers" && (
-          <section id="careers" className="scroll-mt-32">
+          <section id="careers" className="scroll-mt-32 max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <span className="text-4xl mb-4 block animate-float">💼</span>
-              <h2 className="text-3xl font-serif text-text-primary mb-4">
-                Careers
-              </h2>
-              <p className="text-gray-500 max-w-2xl mx-auto">
-                Join our core team of passionate professionals dedicated to
-                driving sustainable development across the country.
-              </p>
+              <span className="text-4xl mb-4 block animate-bounce">💼</span>
+              <h2 className="text-3xl font-serif text-text-primary mb-4">Careers</h2>
+              <p className="text-gray-500">Join our team of professionals driving sustainable development.</p>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden max-w-4xl mx-auto">
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
               {careersLoading ? (
-                <div className="p-6 text-center text-gray-500">
-                  Loading career opportunities...
-                </div>
+                <div className="p-10 text-center text-gray-400 italic">Fetching current openings...</div>
               ) : careersList.length > 0 ? (
                 careersList.map((career) => (
-                  <div
-                    key={career.id}
-                    className="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-gray-50 transition-colors"
-                  >
+                  <div key={career.id} className="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-gray-50 transition-colors">
                     <div>
-                      <h3 className="text-xl font-bold text-primary mb-1">
-                        {career.title}
-                      </h3>
-                      <p className="text-gray-500 text-sm flex items-center gap-2">
-                        <span className="text-base">📍</span> {career.location}
-                      </p>
+                      <h3 className="text-xl font-bold text-primary mb-1">{career.title}</h3>
+                      <p className="text-gray-500 text-sm flex items-center gap-2">📍 {career.location}</p>
                       {career.pdf_url && (
-                        <a
-                          href={`${ADMIN_BASE_URL}${career.pdf_url.startsWith("/") ? career.pdf_url : "/" + career.pdf_url}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline text-sm font-medium mt-1 inline-block"
+                        <a 
+                          href={`${ADMIN_BASE_URL}${career.pdf_url.replace(/^\/+/, '')}`} 
+                          target="_blank" rel="noreferrer" 
+                          className="text-blue-600 hover:underline text-xs mt-2 inline-block font-bold"
                         >
-                          <span className="mr-1">📄</span> View Job Description
+                          📄 View Job Description
                         </a>
                       )}
                     </div>
-                    <a
-                      href={career.apply_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="border-2 border-primary text-primary hover:bg-primary hover:text-white px-6 py-2 rounded-full font-bold transition-colors"
-                    >
+                    <a href={career.apply_link} target="_blank" rel="noreferrer" className="border-2 border-primary text-primary hover:bg-primary hover:text-white px-6 py-2 rounded-full font-bold transition-all">
                       Apply Now
                     </a>
                   </div>
                 ))
               ) : (
-                <div className="p-6 text-center text-gray-500">
-                  There are no open positions at this time.
-                </div>
+                <div className="p-10 text-center text-gray-500">No open positions currently. Check back later!</div>
               )}
             </div>
           </section>
         )}
 
-        {/* Funds */}
+        {/* --- FUNDS (PARTNERS) SECTION --- */}
         {activeTab === "funds" && (
-          <section id="funds" className="mt-8 scroll-mt-32">
+          <section id="funds" className="scroll-mt-32 max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <span className="text-4xl mb-4 block animate-float">🌱</span>
-              <h2 className="text-3xl font-serif text-text-primary mb-4">
-                Partners (EOI/RFQ)
-              </h2>
-              <p className="text-gray-500 max-w-2xl mx-auto">
-                Direct your contribution exactly where it matters. Choose a
-                specific fund to support the causes you care about most.
-              </p>
+              <h2 className="text-3xl font-serif text-text-primary mb-4">Partners (EOI/RFQ)</h2>
+              <p className="text-gray-500">Choose a specific fund to support the causes you care about most.</p>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden max-w-4xl mx-auto">
-              {staticFunds.map((fund) => (
-                <div
-                  key={fund.id}
-                  className="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-primary mb-1">
-                      {fund.title}
-                    </h3>
-                    <p className="text-gray-500 text-sm flex items-center gap-2 mb-2">
-                      <span className="text-base">📍</span> {fund.location}
-                    </p>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {fund.description}
-                    </p>
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+              {fundsLoading ? (
+                <div className="p-10 text-center text-gray-400 italic">Loading opportunities...</div>
+              ) : fundsList.length > 0 ? (
+                fundsList.map((fund) => (
+                  <div key={fund.id} className="p-8 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 hover:bg-gray-50 transition-colors">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-primary mb-1">{fund.title}</h3>
+                      <p className="text-gray-500 text-sm mb-3">📍 {fund.location}</p>
+                      <p className="text-gray-600 text-sm leading-relaxed">{fund.description}</p>
+                    </div>
+                    <a
+                      href={fund.donate_link}
+                      target="_blank" rel="noreferrer"
+                      className="shrink-0 border-2 border-primary text-primary hover:bg-primary hover:text-white px-8 py-3 rounded-full font-bold transition-all hover:shadow-md"
+                    >
+                      Contribute
+                    </a>
                   </div>
-                  <a
-                    href={fund.donate_link}
-                    className="shrink-0 border-2 border-primary text-primary hover:bg-primary hover:text-white px-8 py-3 rounded-full font-bold transition-all hover:shadow-md"
-                  >
-                    Contribute
-                  </a>
-                </div>
-              ))}
+                ))
+              ) : (
+                <div className="p-10 text-center text-gray-500">No active EOI/RFQ found at the moment.</div>
+              )}
             </div>
           </section>
         )}

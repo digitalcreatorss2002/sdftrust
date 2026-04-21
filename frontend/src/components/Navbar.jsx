@@ -81,7 +81,7 @@ const Navbar = () => {
       dropdownItems: [
         { label: 'Annual Reports', path: '/publications#annual-reports', icon: '📈' },
         { label: 'Case Studies', path: '/publications#case-studies', icon: '📝' },
-        { label: 'In Publications', path: '/publications#in-publications', icon: '📚' },
+        { label: 'Our Publications', path: '/publications#in-publications', icon: '📚' },
       ],
     },
     {
