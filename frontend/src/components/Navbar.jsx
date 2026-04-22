@@ -7,7 +7,7 @@ const Navbar = () => {
   const [activeMobileMenu, setActiveMobileMenu] = useState(null);
   const [dynamicPrograms, setDynamicPrograms] = useState([]);
 
-  // 🔥 ONLY FIX (NO UI CHANGE)
+  // ✅ Fix for (EOI/RFQ) capitalization
   const formatLabel = (label) => {
     if (!label) return '';
     return label.replace(/\(eoi\/rfq\)/gi, '(EOI/RFQ)');
@@ -104,6 +104,7 @@ const Navbar = () => {
         { label: 'Volunteer With Us', path: '/get-involved#volunteer', icon: '🤝' },
         { label: 'Careers', path: '/get-involved#careers', icon: '💼' },
         { label: 'Partners (EOI/RFQ)', path: '/get-involved#funds', icon: '🌱' },
+        { label: 'Contact Us', path: '/contact', icon: '📞' },
       ],
     },
     {
@@ -117,44 +118,48 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
 
-          {/* Logo */}
+          {/* Logo Section */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2">
               <div className="flex items-center justify-center h-16 w-auto">
-                <img src="/logo/logo-bg.png" alt="Logo" className="h-full object-contain" />
+                <img src="/logo/logo-bg.png" alt="SDF Logo" className="h-full object-contain" />
               </div>
             </Link>
           </div>
 
-          {/* Desktop */}
+          {/* Desktop Navigation (Hover Controlled) */}
           <div className="hidden lg:flex items-center space-x-1">
             {menuItems.map((item) => (
               <div key={item.name} className="relative group px-2 py-6">
+                {/* Main Link */}
                 <Link
                   to={item.path}
-                  className="text-text-primary hover:text-primary font-bold text-sm flex items-center gap-1"
+                  className="text-text-primary hover:text-primary font-bold text-sm transition-colors flex items-center gap-1 whitespace-nowrap"
                 >
                   {item.name}
-                  {item.hasDropdown && <span className="text-[10px]">▼</span>}
+                  {item.hasDropdown && (
+                    <span className="text-[10px] text-gray-400 group-hover:rotate-180 transition-transform duration-300">
+                      ▼
+                    </span>
+                  )}
                 </Link>
 
+                {/* 🔥 Dropdown Menu: Shows on Hover via 'group-hover' */}
                 {item.hasDropdown && (
-                  <div className="absolute left-1/2 -translate-x-1/2 top-full w-64 bg-white shadow-xl border rounded-xl opacity-0 group-hover:opacity-100 transition">
-
+                  <div className="absolute left-1/2 -translate-x-1/2 top-[90%] w-64 bg-white shadow-2xl border border-gray-100 rounded-xl opacity-0 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-2 group-hover:pointer-events-auto transition-all duration-300 z-50">
                     <div className="p-2">
                       {item.dropdownItems.map((subItem) => (
                         <Link
                           key={subItem.label}
                           to={subItem.path}
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors group/link"
                         >
-                          <span>{subItem.icon}</span>
-
-                          {/* 🔥 FIX ONLY */}
-                          <span className="text-sm font-bold normal-case">
+                          <span className="text-xl group-hover/link:scale-110 transition-transform">
+                            {subItem.icon}
+                          </span>
+                          <span className="text-sm font-bold text-gray-700 group-hover/link:text-primary normal-case">
                             {formatLabel(subItem.label)}
                           </span>
-
                         </Link>
                       ))}
                     </div>
@@ -162,51 +167,87 @@ const Navbar = () => {
                 )}
               </div>
             ))}
-
-            <Link to="/donate" className="bg-accent text-white px-6 py-2.5 rounded-full ml-2">
-              Donate
-            </Link>
+            <div className="pl-4">
+              <Link
+                to="/donate"
+                className="inline-flex items-center justify-center bg-accent hover:bg-[#237586] text-white px-6 py-2.5 rounded-full font-bold transition-all shadow-sm hover:-translate-y-0.5 hover:shadow-md ml-2"
+              >
+                Donate
+              </Link>
+            </div>
           </div>
 
-          {/* Mobile Toggle */}
-          <div className="lg:hidden">
-            <button onClick={() => setIsOpen(!isOpen)}>
-              {isOpen ? '✕' : '☰'}
+          {/* Mobile menu button */}
+          <div className="flex items-center lg:hidden">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-text-primary hover:text-primary p-2 focus:outline-none"
+            >
+              <span className="text-2xl font-bold">{isOpen ? '✕' : '☰'}</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile */}
-      {isOpen && (
-        <div className="lg:hidden bg-white">
+      {/* Mobile Navigation (Click/Toggle Controlled) */}
+      <div 
+        className={`lg:hidden transition-all duration-300 ease-in-out overflow-hidden ${
+          isOpen ? 'max-h-screen border-t border-gray-100' : 'max-h-0'
+        }`}
+      >
+        <div className="px-4 pt-2 pb-6 space-y-1 bg-white shadow-inner max-h-[calc(100vh-80px)] overflow-y-auto">
           {menuItems.map((item) => (
-            <div key={item.name}>
+            <div key={item.name} className="border-b border-gray-50 last:border-0">
               {item.hasDropdown ? (
                 <>
-                  <button onClick={() => toggleMobileMenu(item.name)}>
+                  <button
+                    onClick={() => toggleMobileMenu(item.name)}
+                    className="w-full flex items-center justify-between px-3 py-4 text-base font-bold text-text-primary focus:outline-none"
+                  >
                     {item.name}
+                    <span className={`text-sm text-gray-400 transition-transform ${activeMobileMenu === item.name ? 'rotate-180 text-primary' : ''}`}>
+                      ▼
+                    </span>
                   </button>
-
-                  {activeMobileMenu === item.name && (
-                    <div>
-                      {item.dropdownItems.map((subItem) => (
-                        <Link key={subItem.label} to={subItem.path}>
-                          {formatLabel(subItem.label)}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+                  <div 
+                    className={`overflow-hidden transition-all duration-300 ease-in-out bg-gray-50 rounded-lg ${
+                      activeMobileMenu === item.name ? 'max-h-96 mb-2 opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    {item.dropdownItems.map((subItem) => (
+                      <Link
+                        key={subItem.label}
+                        to={subItem.path}
+                        className="flex items-center gap-3 px-6 py-3 text-sm font-bold text-gray-600 hover:text-primary hover:bg-white transition-colors normal-case"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <span className="text-lg">{subItem.icon}</span> {formatLabel(subItem.label)}
+                      </Link>
+                    ))}
+                  </div>
                 </>
               ) : (
-                <Link to={item.path}>{item.name}</Link>
+                <Link
+                  to={item.path}
+                  className="block px-3 py-4 text-base font-bold text-text-primary"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.name}
+                </Link>
               )}
             </div>
           ))}
-
-          <Link to="/donate">Donate</Link>
+          <div className="pt-6 pb-2">
+            <Link
+              to="/donate"
+              className="block w-full text-center bg-accent text-white px-6 py-4 rounded-xl font-bold shadow-md"
+              onClick={() => setIsOpen(false)}
+            >
+              ❤️ Donate Now
+            </Link>
+          </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
