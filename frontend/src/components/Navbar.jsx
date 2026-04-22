@@ -102,7 +102,7 @@ const Navbar = () => {
       dropdownItems: [
         { label: 'Volunteer With Us', path: '/get-involved#volunteer', icon: '🤝' },
         { label: 'Careers', path: '/get-involved#careers', icon: '💼' },
-        { label: 'Active Funds', path: '/get-involved#funds', icon: '🌱' },
+        { label: 'Partners (EOI/RFQ)', path: '/get-involved#funds', icon: '🌱' },
         { label: 'Contact Us', path: '/contact', icon: '📞' },
       ],
     },
