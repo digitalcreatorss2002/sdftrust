@@ -300,12 +300,12 @@ const Home = () => {
                         {project.description}
                       </p>
                       
-                      <Link 
+                      {/* <Link 
                         to={`/projectdetails/${project.slug}`}
                         className="text-primary font-bold text-sm hover:underline mt-auto"
                       >
                         View Project →
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 ))

@@ -83,7 +83,7 @@ const GetInvolved = () => {
               { id: "volunteer", label: "Volunteer With Us", icon: "🤝", path: null },
               { id: "careers", label: "Careers", icon: "💼", path: null },
               { id: "funds", label: "Partners (EOI/RFQ)", icon: "🌱", path: null },
-              { id: "contact", label: "Contact Us", icon: "📞", path: "/contact" },
+              // { id: "contact", label: "Contact Us", icon: "📞", path: "/contact" },
             ].map((tab) => {
               const isLink = tab.path !== null;
               const baseClass = `py-4 px-1 flex items-center gap-2 border-b-2 font-bold transition-all text-sm md:text-base ${
