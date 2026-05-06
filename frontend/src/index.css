@@ -94,10 +94,27 @@ body {
 }
 
 /* Add this to your App.css */
-.group\/link span:last-child {
+/* .group\/link span:last-child {
   text-transform: lowercase;
+} */
+
+
+
+/* Sirf un labels ko capitalize karo jo normal text hain */
+.group\/link span:last-child {
+  /* text-transform ko delete kar dena hi behtar hai */
+  text-transform: none !important; 
 }
+
+
 
 .group\/link span:last-child::first-letter {
   text-transform: uppercase;
+}
+
+/* Iske bina map 0px height par rehta hai aur dikhta nahi hai */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  min-height: 400px; /* Ya jo bhi height aapko chahiye */
 }
