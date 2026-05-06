@@ -7,7 +7,7 @@ const Navbar = () => {
   const [activeMobileMenu, setActiveMobileMenu] = useState(null);
   const [dynamicPrograms, setDynamicPrograms] = useState([]);
 
-  // ✅ Fix for (EOI/RFQ) capitalization
+  // ✅ Fix for (EOI/RFQ) capitalization - Regex handles any case variation
   const formatLabel = (label) => {
     if (!label) return '';
     return label.replace(/\(eoi\/rfq\)/gi, '(EOI/RFQ)');
@@ -127,11 +127,10 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation (Hover Controlled) */}
+          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-1">
             {menuItems.map((item) => (
               <div key={item.name} className="relative group px-2 py-6">
-                {/* Main Link */}
                 <Link
                   to={item.path}
                   className="text-text-primary hover:text-primary font-bold text-sm transition-colors flex items-center gap-1 whitespace-nowrap"
@@ -144,7 +143,6 @@ const Navbar = () => {
                   )}
                 </Link>
 
-                {/* 🔥 Dropdown Menu: Shows on Hover via 'group-hover' */}
                 {item.hasDropdown && (
                   <div className="absolute left-1/2 -translate-x-1/2 top-[90%] w-64 bg-white shadow-2xl border border-gray-100 rounded-xl opacity-0 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-2 group-hover:pointer-events-auto transition-all duration-300 z-50">
                     <div className="p-2">
@@ -189,7 +187,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation (Click/Toggle Controlled) */}
+      {/* Mobile Navigation */}
       <div 
         className={`lg:hidden transition-all duration-300 ease-in-out overflow-hidden ${
           isOpen ? 'max-h-screen border-t border-gray-100' : 'max-h-0'
@@ -221,7 +219,8 @@ const Navbar = () => {
                         className="flex items-center gap-3 px-6 py-3 text-sm font-bold text-gray-600 hover:text-primary hover:bg-white transition-colors normal-case"
                         onClick={() => setIsOpen(false)}
                       >
-                        <span className="text-lg">{subItem.icon}</span> {formatLabel(subItem.label)}
+                        <span className="text-lg">{subItem.icon}</span> 
+                        {formatLabel(subItem.label)}
                       </Link>
                     ))}
                   </div>
