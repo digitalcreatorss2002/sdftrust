@@ -8,6 +8,7 @@ import Testimonials from "./Testimonials";
 import MapSection from "../components/MapSection";
 import PartnersSection from "../components/Partners";
 import ProjectSlider from "../components/ProjectSlider";
+// import ProjectMap from "../components/ProjectMap";
 
 const PROGRAMS_API_URL = `${API_BASE_URL}/programs.php?t=` + Date.now();
 const SUBSCRIBE_API_URL = `${API_BASE_URL}/subscribe.php`;
@@ -234,7 +235,7 @@ const Home = () => {
                 </h2>
               </div>
 
-              <p className="text-gray-600 mb-6 leading-relaxed line-clamp-8">
+              <p className="text-gray-600 mb-6 leading-relaxed line-clamp-9">
                 {aboutData && aboutData.who_we_are_text
                   ? aboutData.who_we_are_text
                   : "Established in 2014 by a dedicated group of professional social workers, the Sustainable Development Foundation (SDF) is a distinguished autonomous and 'not-for-profit' organization in India..."}
@@ -300,12 +301,12 @@ const Home = () => {
                         {project.description}
                       </p>
                       
-                      {/* <Link 
+                      <Link 
                         to={`/projectdetails/${project.slug}`}
                         className="text-primary font-bold text-sm hover:underline mt-auto"
                       >
                         View Project →
-                      </Link> */}
+                      </Link>
                     </div>
                   </div>
                 ))
@@ -594,6 +595,7 @@ const Home = () => {
       </section>
 
       <PartnersSection />
+      {/* <ProjectMap/>         */}
 
       <section className="py-10 bg-primary/10 border-t border-primary/20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
