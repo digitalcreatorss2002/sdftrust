@@ -80,14 +80,7 @@ const Footer = () => {
                   Impact & Evidence
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/contact"
-                  className="hover:opacity-75 transition-opacity"
-                >
-                  Contact Us
-                </Link>
-              </li>
+              
             </ul>
           </div>
 
