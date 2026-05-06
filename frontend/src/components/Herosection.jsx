@@ -41,7 +41,7 @@ function Herosection() {
     if (heroCards.length === 0) return;
     intervalRef.current = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % heroCards.length);
-    }, 5000);
+    }, 10000);
     return () => clearInterval(intervalRef.current);
   }, [heroCards]);
 
@@ -50,7 +50,7 @@ function Herosection() {
   const handleMouseLeave = () => {
     intervalRef.current = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % heroCards.length);
-    }, 5000);
+    }, 10000);
   };
 
   const activeVideo = getYoutubeId(heroCards[activeIndex]?.youtube_link);
