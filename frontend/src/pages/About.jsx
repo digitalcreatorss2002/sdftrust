@@ -27,11 +27,15 @@ const About = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const aboutRes = await fetch(`${API_BASE_URL}/about_who_we_are.php?t=${Date.now()}`);
+        const aboutRes = await fetch(
+          `${API_BASE_URL}/about_who_we_are.php?t=${Date.now()}`,
+        );
         const aboutJson = await aboutRes.json();
         if (aboutJson.status === "success") setAboutData(aboutJson.data);
 
-        const leadRes = await fetch(`${API_BASE_URL}/leadership.php?t=${Date.now()}`);
+        const leadRes = await fetch(
+          `${API_BASE_URL}/leadership.php?t=${Date.now()}`,
+        );
         const leadJson = await leadRes.json();
         if (leadJson.status === "success") setLeadershipData(leadJson.data);
       } catch (err) {
@@ -51,7 +55,13 @@ const About = () => {
   useEffect(() => {
     if (location.hash) {
       const tab = location.hash.replace("#", "");
-      const validTabs = ["who-we-are", "leadership", "approach", "partners", "faq"];
+      const validTabs = [
+        "who-we-are",
+        "leadership",
+        "approach",
+        "partners",
+        "faq",
+      ];
       if (validTabs.includes(tab)) {
         setActiveTab(tab);
       }
@@ -61,10 +71,26 @@ const About = () => {
   }, [location]);
 
   const faqs = [
-    { question: "How is the Sustainable Development Foundation funded?", answer: "We are funded primarily through grants, corporate partnerships (CSR), and individual donations." },
-    { question: "Can I volunteer if I don't live in a project area?", answer: "Absolutely! We offer remote volunteering opportunities in various fields." },
-    { question: "How do you measure the impact of your programs?", answer: "We employ rigorous monitoring and evaluation frameworks with regular data collection." },
-    { question: "Are my donations tax-deductible?", answer: "Yes, all donations are eligible for 50% tax exemption under Section 80G." },
+    {
+      question: "How is the Sustainable Development Foundation funded?",
+      answer:
+        "We are funded primarily through grants, corporate partnerships (CSR), and individual donations.",
+    },
+    {
+      question: "Can I volunteer if I don't live in a project area?",
+      answer:
+        "Absolutely! We offer remote volunteering opportunities in various fields.",
+    },
+    {
+      question: "How do you measure the impact of your programs?",
+      answer:
+        "We employ rigorous monitoring and evaluation frameworks with regular data collection.",
+    },
+    {
+      question: "Are my donations tax-deductible?",
+      answer:
+        "Yes, all donations are eligible for 50% tax exemption under Section 80G.",
+    },
   ];
 
   const tabs = [
@@ -78,7 +104,9 @@ const About = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg-color">
-        <div className="text-primary font-bold animate-pulse text-xl">Loading About Us...</div>
+        <div className="text-primary font-bold animate-pulse text-xl">
+          Loading About Us...
+        </div>
       </div>
     );
   }
@@ -88,9 +116,12 @@ const About = () => {
       {/* Hero Section */}
       <section className="bg-primary text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">About Us</h1>
+          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
+            About Us
+          </h1>
           <p className="text-xl max-w-2xl mx-auto text-white opacity-90">
-            Discover our journey, our vision, and the people behind our mission to empower communities.
+            Discover our journey, our vision, and the people behind our mission
+            to empower communities.
           </p>
         </div>
       </section>
@@ -117,12 +148,13 @@ const About = () => {
 
       {/* CONTENT AREA */}
       <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        
         {/* 1. WHO WE ARE */}
         {activeTab === "who-we-are" && (
           <div className="animate-fade-in">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-serif text-text-primary mb-4">Who We Are</h2>
+              <h2 className="text-3xl font-serif text-text-primary mb-4">
+                Who We Are
+              </h2>
               <div className="w-24 h-1 bg-accent mx-auto"></div>
               <p className="mt-6 text-gray-600 text-lg leading-relaxed text-left max-w-5xl mx-auto">
                 {aboutData?.who_we_are_text || "Content loading..."}
@@ -131,18 +163,35 @@ const About = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
               {[
-                { title: "💡 Our Vision", text: aboutData?.vision_text, img: aboutData?.vision_image || "/about/5.png" },
-                { title: "🎯 Our Mission", text: aboutData?.mission_text, img: aboutData?.mission_image || "/about/3.png" }
+                {
+                  title: "💡 Our Vision",
+                  text: aboutData?.vision_text,
+                  img: aboutData?.vision_image || "/about/5.png",
+                },
+                {
+                  title: "🎯 Our Mission",
+                  text: aboutData?.mission_text,
+                  img: aboutData?.mission_image || "/about/3.png",
+                },
               ].map((box, i) => (
                 <div
                   key={i}
                   className="relative rounded-2xl overflow-hidden shadow-lg h-80 flex items-center justify-center text-center bg-gray-900 group"
-                  style={{ backgroundImage: `url('${makeImageUrl(box.img)}')`, backgroundSize: "cover", backgroundPosition: "center" }}
+                  style={{
+                    backgroundImage: `url('${makeImageUrl(box.img)}')`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
                 >
                   <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-all duration-500"></div>
                   <div className="relative z-10 px-8">
-                    <h3 className="text-2xl font-serif text-white mb-4">{box.title}</h3>
-                    <div className="text-gray-200 leading-relaxed" dangerouslySetInnerHTML={{ __html: box.text }} />
+                    <h3 className="text-2xl font-serif text-white mb-4">
+                      {box.title}
+                    </h3>
+                    <div
+                      className="text-gray-200 leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: box.text }}
+                    />
                   </div>
                 </div>
               ))}
@@ -150,18 +199,26 @@ const About = () => {
 
             {/* Journey Timeline */}
             <div className="bg-white p-10 rounded-2xl shadow-sm border border-gray-100">
-              <h3 className="text-2xl font-serif text-text-primary mb-10 text-center">Our Journey (2014—Present)</h3>
+              <h3 className="text-2xl font-serif text-text-primary mb-10 text-center">
+                Our Journey (2014—Present)
+              </h3>
               <div className="flex flex-col md:flex-row justify-between items-center text-center gap-6">
                 {[
                   { year: "2014", desc: "Foundation Established" },
                   { year: "2018", desc: "Expanded to 5 States" },
                   { year: "2022", desc: "1 Million Beneficiaries" },
-                  { year: "2026", desc: "Global Recognition" }
+                  { year: "2026", desc: "Global Recognition" },
                 ].map((step, i, arr) => (
                   <div key={i} className="flex flex-col items-center flex-1">
-                    <div className="text-primary text-3xl font-bold mb-2">{step.year}</div>
-                    <p className="text-sm text-gray-500 font-medium">{step.desc}</p>
-                    {i !== arr.length - 1 && <div className="hidden md:block w-full h-px bg-gray-200 mt-4"></div>}
+                    <div className="text-primary text-3xl font-bold mb-2">
+                      {step.year}
+                    </div>
+                    <p className="text-sm text-gray-500 font-medium">
+                      {step.desc}
+                    </p>
+                    {i !== arr.length - 1 && (
+                      <div className="hidden md:block w-full h-px bg-gray-200 mt-4"></div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -173,7 +230,9 @@ const About = () => {
         {activeTab === "leadership" && (
           <div className="animate-fade-in">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-serif text-text-primary mb-4">Leadership & Governance</h2>
+              <h2 className="text-3xl font-serif text-text-primary mb-4">
+                Leadership & Governance
+              </h2>
               <div className="w-24 h-1 bg-primary mx-auto"></div>
             </div>
 
@@ -185,8 +244,12 @@ const About = () => {
                   className="cursor-pointer bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center hover:-translate-y-2 hover:shadow-xl transition-all duration-300"
                 >
                   <div className="mb-4 text-4xl">{item.icon}</div>
-                  <h3 className="font-serif text-lg font-bold mb-2">{item.title}</h3>
-                  <p className="text-sm text-gray-500 line-clamp-2">{item.description}</p>
+                  <h3 className="font-serif text-lg font-bold mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-gray-500 line-clamp-2">
+                    {item.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -194,39 +257,73 @@ const About = () => {
             {/* Leadership Modal */}
             {selectedLeader && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
-                <div className={`max-w-6xl w-full rounded-3xl p-6 md:p-10 overflow-y-auto max-h-[90vh] relative shadow-2xl transition-all ${selectedLeader.title.includes("Founder") ? "bg-[#6f7c2e] text-white" : "bg-white text-gray-800"}`}>
-                  <button onClick={() => setSelectedLeader(null)} className="absolute top-6 right-6 w-12 h-12 rounded-full font-bold shadow-lg transition-all flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-black">✕</button>
-                  <h2 className={`text-3xl md:text-5xl font-bold text-center mb-10 italic ${selectedLeader.title.includes("Founder") ? "text-white" : "text-[#6a752b]"}`}>{selectedLeader.title}</h2>
-                  
+                <div
+                  className={`max-w-6xl w-full rounded-3xl p-6 md:p-10 overflow-y-auto max-h-[90vh] relative shadow-2xl transition-all ${selectedLeader.title.includes("Founder") ? "bg-[#6f7c2e] text-white" : "bg-white text-gray-800"}`}
+                >
+                  <button
+                    onClick={() => setSelectedLeader(null)}
+                    className="absolute top-6 right-6 w-12 h-12 rounded-full font-bold shadow-lg transition-all flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-black"
+                  >
+                    ✕
+                  </button>
+                  <h2
+                    className={`text-3xl md:text-5xl font-bold text-center mb-10 italic ${selectedLeader.title.includes("Founder") ? "text-white" : "text-[#6a752b]"}`}
+                  >
+                    {selectedLeader.title}
+                  </h2>
+
                   {selectedLeader.title.includes("Founder") ? (
                     <div className="max-w-4xl mx-auto space-y-6 text-lg leading-relaxed text-justify px-4">
-                      {selectedLeader.members[0]?.content?.split("\n").map((p, i) => <p key={i}>{p}</p>)}
+                      {selectedLeader.members[0]?.content
+                        ?.split("\n")
+                        .map((p, i) => (
+                          <p key={i}>{p}</p>
+                        ))}
                     </div>
                   ) : (
                     <div className="space-y-12">
-                       {selectedLeader.intro_text && <p className="text-center text-lg max-w-3xl mx-auto opacity-90 mb-10">{selectedLeader.intro_text}</p>}
-                       {["General", "M1", "M2", "M3"].map((lvl) => {
-                         const filteredMembers = selectedLeader.members.filter((m) => m.staff_level === lvl);
-                         if (filteredMembers.length === 0) return null;
-                         return (
-                           <div key={lvl}>
-                             <h3 className="text-xl font-bold mb-8 border-b border-gray-100 pb-2 inline-block uppercase tracking-widest text-[#6a752b]">{lvl} Level Team</h3>
-                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                               {filteredMembers.map((m, i) => (
-                                 <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-md border border-gray-100 group">
-                                   <div className="w-full h-64 bg-gray-50 overflow-hidden">
-                                     <img src={makeImageUrl(m.image_url)} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={m.name} />
-                                   </div>
-                                   <div className="p-5 text-center">
-                                     <h4 className="text-[#6a752b] font-bold text-lg">{m.name}</h4>
-                                     <p className="text-gray-500 text-sm mt-1">{m.role}</p>
-                                   </div>
-                                 </div>
-                               ))}
-                             </div>
-                           </div>
-                         );
-                       })}
+                      {selectedLeader.intro_text && (
+                        <p className="text-center text-lg max-w-3xl mx-auto opacity-90 mb-10">
+                          {selectedLeader.intro_text}
+                        </p>
+                      )}
+                      {["General", "M1", "M2", "M3"].map((lvl) => {
+                        const filteredMembers = selectedLeader.members.filter(
+                          (m) => m.staff_level === lvl,
+                        );
+                        if (filteredMembers.length === 0) return null;
+                        return (
+                          <div key={lvl}>
+                            <h3 className="text-xl font-bold mb-8 border-b border-gray-100 pb-2 inline-block uppercase tracking-widest text-[#6a752b]">
+                              {lvl} Level Team
+                            </h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                              {filteredMembers.map((m, i) => (
+                                <div
+                                  key={i}
+                                  className="bg-white rounded-2xl overflow-hidden shadow-md border border-gray-100 group"
+                                >
+                                  <div className="w-full h-64 bg-gray-50 overflow-hidden">
+                                    <img
+                                      src={makeImageUrl(m.image_url)}
+                                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                      alt={m.name}
+                                    />
+                                  </div>
+                                  <div className="p-5 text-center">
+                                    <h4 className="text-[#6a752b] font-bold text-lg">
+                                      {m.name}
+                                    </h4>
+                                    <p className="text-gray-500 text-sm mt-1">
+                                      {m.role}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -239,15 +336,28 @@ const About = () => {
         {activeTab === "approach" && (
           <div className="max-w-4xl mx-auto animate-fade-in">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-serif text-text-primary mb-4">Our Approach</h2>
+              <h2 className="text-3xl font-serif text-text-primary mb-4">
+                Our Approach
+              </h2>
               <div className="w-24 h-1 bg-primary mx-auto"></div>
             </div>
             <div className="space-y-6">
               {[
-                { title: "Theory of Change", color: "border-primary", text: "A systematic method to map out our long-term goals and the steps required to achieve sustainable impact." },
-                { title: "Community-Centric Model", color: "border-secondary", text: "Putting the community at the heart of decision-making to ensure ownership and long-lasting changes." }
+                {
+                  title: "Theory of Change",
+                  color: "border-primary",
+                  text: "A systematic method to map out our long-term goals and the steps required to achieve sustainable impact.",
+                },
+                {
+                  title: "Community-Centric Model",
+                  color: "border-secondary",
+                  text: "Putting the community at the heart of decision-making to ensure ownership and long-lasting changes.",
+                },
               ].map((item, i) => (
-                <div key={i} className={`bg-white p-8 rounded-2xl shadow-sm border-l-4 ${item.color}`}>
+                <div
+                  key={i}
+                  className={`bg-white p-8 rounded-2xl shadow-sm border-l-4 ${item.color}`}
+                >
                   <h3 className="font-bold text-xl mb-3">{item.title}</h3>
                   <p className="text-gray-600 leading-relaxed">{item.text}</p>
                 </div>
@@ -260,39 +370,48 @@ const About = () => {
         {activeTab === "partners" && (
           <div className="max-w-4xl mx-auto animate-fade-in text-center">
             <div className="mb-12">
-              <h2 className="text-3xl font-serif text-text-primary mb-4">Partners & Affiliations</h2>
+              <h2 className="text-3xl font-serif text-text-primary mb-4">
+                Partners & Affiliations
+              </h2>
               <div className="w-24 h-1 bg-primary mx-auto"></div>
             </div>
+
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-16">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <Link to="/partners" className="p-8 bg-gray-50 rounded-2xl hover:shadow-lg transition-all group cursor-pointer border border-transparent hover:border-primary/20">
-                  <div className="font-bold text-primary text-xl mb-2 group-hover:scale-105 transition-transform">Corporate</div>
+                {/* 1. Corporate Section */}
+                <Link
+                  to="/partners"
+                  className="p-8 bg-gray-50 rounded-2xl hover:shadow-lg transition-all group cursor-pointer border border-transparent hover:border-primary/20"
+                >
+                  <div className="font-bold text-primary text-xl mb-2 group-hover:scale-105 transition-transform">
+                    Corporate
+                  </div>
                   <div className="text-gray-500">CSR Partners</div>
                 </Link>
-                {[
-                  { id: "public", title: "Public", desc: "Government Alliances", content: "We collaborate with various government bodies and public sector undertakings to implement large-scale social welfare projects and policy-driven initiatives." },
-                  { id: "civil", title: "Civil Society", desc: "NGO Partners", content: "Our network includes grassroots NGOs, community-based organizations, and academic institutions working together to ensure last-mile delivery of services." }
-                ].map((p) => (
-                  <div key={p.id} onClick={() => setSelectedPartner({ title: p.title, content: p.content })} className="p-8 bg-gray-50 rounded-2xl hover:shadow-lg transition-all cursor-pointer group border border-transparent hover:border-primary/20">
-                    <div className="font-bold text-primary text-xl mb-2 group-hover:scale-105 transition-transform">{p.title}</div>
-                    <div className="text-gray-500">{p.desc}</div>
+
+                {/* 2. Public Section */}
+                <Link
+                  to="/partners"
+                  className="p-8 bg-gray-50 rounded-2xl hover:shadow-lg transition-all group cursor-pointer border border-transparent hover:border-primary/20"
+                >
+                  <div className="font-bold text-primary text-xl mb-2 group-hover:scale-105 transition-transform">
+                    Public
                   </div>
-                ))}
+                  <div className="text-gray-500">Government Alliances</div>
+                </Link>
+
+                {/* 3. Civil Society Section */}
+                <Link
+                  to="/partners"
+                  className="p-8 bg-gray-50 rounded-2xl hover:shadow-lg transition-all group cursor-pointer border border-transparent hover:border-primary/20"
+                >
+                  <div className="font-bold text-primary text-xl mb-2 group-hover:scale-105 transition-transform">
+                    Civil Society
+                  </div>
+                  <div className="text-gray-500">NGO Partners</div>
+                </Link>
               </div>
             </div>
-
-            {/* Pop-up Modal for Public and Civil Society */}
-            {selectedPartner && (
-              <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-                <div className="bg-white rounded-3xl p-10 max-w-lg w-full shadow-2xl relative text-left">
-                  <button onClick={() => setSelectedPartner(null)} className="absolute top-6 right-6 text-gray-400 hover:text-primary transition-colors text-2xl">✕</button>
-                  <h3 className="text-2xl font-serif text-primary mb-4">{selectedPartner.title}</h3>
-                  <div className="w-12 h-1 bg-secondary mb-6"></div>
-                  <p className="text-gray-600 leading-relaxed">{selectedPartner.content}</p>
-                  <button onClick={() => setSelectedPartner(null)} className="mt-10 w-full bg-primary text-white py-4 rounded-xl font-bold hover:bg-secondary transition-all shadow-lg">Close</button>
-                </div>
-              </div>
-            )}
           </div>
         )}
 
@@ -300,18 +419,36 @@ const About = () => {
         {activeTab === "faq" && (
           <div className="max-w-3xl mx-auto animate-fade-in">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-serif text-text-primary mb-4">Frequently Asked Questions</h2>
+              <h2 className="text-3xl font-serif text-text-primary mb-4">
+                Frequently Asked Questions
+              </h2>
               <div className="w-24 h-1 bg-primary mx-auto mb-6"></div>
             </div>
             <div className="space-y-4">
               {faqs.map((faq, index) => (
-                <div key={index} className={`border rounded-2xl overflow-hidden transition-all duration-300 ${openFaq === index ? "border-primary shadow-lg bg-white" : "border-gray-100 bg-white"}`}>
-                  <button className="w-full text-left px-6 py-5 flex justify-between items-center" onClick={() => toggleFaq(index)}>
-                    <span className="font-bold text-text-primary">{faq.question}</span>
-                    <span className={`transition-transform duration-300 ${openFaq === index ? "rotate-180 text-primary" : "text-gray-300"}`}>▼</span>
+                <div
+                  key={index}
+                  className={`border rounded-2xl overflow-hidden transition-all duration-300 ${openFaq === index ? "border-primary shadow-lg bg-white" : "border-gray-100 bg-white"}`}
+                >
+                  <button
+                    className="w-full text-left px-6 py-5 flex justify-between items-center"
+                    onClick={() => toggleFaq(index)}
+                  >
+                    <span className="font-bold text-text-primary">
+                      {faq.question}
+                    </span>
+                    <span
+                      className={`transition-transform duration-300 ${openFaq === index ? "rotate-180 text-primary" : "text-gray-300"}`}
+                    >
+                      ▼
+                    </span>
                   </button>
-                  <div className={`px-6 overflow-hidden transition-all duration-500 ${openFaq === index ? "max-h-96 opacity-100 pb-6" : "max-h-0 opacity-0"}`}>
-                    <div className="pt-2 border-t border-gray-50 text-gray-600 leading-relaxed">{faq.answer}</div>
+                  <div
+                    className={`px-6 overflow-hidden transition-all duration-500 ${openFaq === index ? "max-h-96 opacity-100 pb-6" : "max-h-0 opacity-0"}`}
+                  >
+                    <div className="pt-2 border-t border-gray-50 text-gray-600 leading-relaxed">
+                      {faq.answer}
+                    </div>
                   </div>
                 </div>
               ))}
