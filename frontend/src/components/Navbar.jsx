@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { API_BASE_URL } from '../config';
+import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { API_BASE_URL } from "../config";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,26 +9,28 @@ const Navbar = () => {
 
   // ✅ Fix for (EOI/RFQ) capitalization - Regex handles any case variation
   const formatLabel = (label) => {
-    if (!label) return '';
-    return label.replace(/\(eoi\/rfq\)/gi, '(EOI/RFQ)');
+    if (!label) return "";
+    return label.replace(/\(eoi\/rfq\)/gi, "(EOI/RFQ)");
   };
 
   useEffect(() => {
     const fetchPrograms = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/programs.php?t=${Date.now()}`);
+        const response = await fetch(
+          `${API_BASE_URL}/programs.php?t=${Date.now()}`,
+        );
         const data = await response.json();
-        if (data.status === 'success') {
+        if (data.status === "success") {
           const uniquePrograms = [];
           const seen = new Set();
           for (const prog of data.data) {
-            const normalizedId = (prog.program_id || '').toLowerCase().trim();
+            const normalizedId = (prog.program_id || "").toLowerCase().trim();
             if (!seen.has(normalizedId)) {
               seen.add(normalizedId);
               uniquePrograms.push({
                 label: prog.title,
                 path: `/programs?filter=${encodeURIComponent(normalizedId)}`,
-                icon: prog.icon || '📌'
+                icon: prog.icon || "📌",
               });
             }
           }
@@ -47,69 +49,94 @@ const Navbar = () => {
 
   const menuItems = [
     {
-      name: 'About',
-      path: '/about',
+      name: "About",
+      path: "/about",
       hasDropdown: true,
       dropdownItems: [
-        { label: 'Who We Are', path: '/about#who-we-are', icon: '💡' },
-        { label: 'Leadership', path: '/about#leadership', icon: '👥' },
-        { label: 'Our Approach', path: '/about#approach', icon: '🎯' },
-        { label: 'Partners', path: '/about#partners', icon: '🤝' },
-        { label: 'FAQ', path: '/about#fAq', icon: '🙋' },
+        { label: "Who We Are", path: "/about#who-we-are", icon: "💡" },
+        { label: "Leadership", path: "/about#leadership", icon: "👥" },
+        { label: "Our Approach", path: "/about#approach", icon: "🎯" },
+        { label: "Partners", path: "/about#partners", icon: "🤝" },
+        { label: "FAQ", path: "/about#fAq", icon: "🙋" },
       ],
     },
     {
-      name: 'Programs',
-      path: '/programs',
+      name: "Programs",
+      path: "/programs",
       hasDropdown: true,
-      dropdownItems: dynamicPrograms.length > 0 ? dynamicPrograms : [
-        { label: 'Loading...', path: '/programs', icon: '⏳' }
-      ],
+      dropdownItems:
+        dynamicPrograms.length > 0
+          ? dynamicPrograms
+          : [{ label: "Loading...", path: "/programs", icon: "⏳" }],
     },
     {
-      name: 'Our Work',
-      path: '/projects',
-      hasDropdown: true,
-      dropdownItems: [
-        { label: 'Ongoing Projects', path: '/projects#ongoing', icon: '🏢' },
-        { label: 'State-wise Listings', path: '/projects#listings', icon: '🗺️' },
-        { label: 'Impact Snapshot', path: '/projects#impact', icon: '📊' },
-      ],
-    },
-    {
-      name: 'Publications',
-      path: '/publications',
+      name: "Our Work",
+      path: "/projects#ongoing",
       hasDropdown: true,
       dropdownItems: [
-        { label: 'Annual Reports', path: '/publications#annual-reports', icon: '📈' },
-        { label: 'Case Studies', path: '/publications#case-studies', icon: '📝' },
-        { label: 'Our Publications', path: '/publications#in-publications', icon: '📚' },
+        { label: "Ongoing Projects", path: "/projects#ongoing", icon: "🏢" },
+        {
+          label: "State-wise Listings",
+          path: "/projects#listings",
+          icon: "🗺️",
+        },
+        { label: "Impact Snapshot", path: "/projects#impact", icon: "📊" },
       ],
     },
     {
-      name: 'Media & Stories',
-      path: '/media',
+      name: "Publications",
+      path: "/publications",
       hasDropdown: true,
       dropdownItems: [
-        { label: 'Photo Gallery', path: '/media#photos', icon: '📸' },
-        { label: 'Video Gallery', path: '/media#videos', icon: '🎥' },
-        { label: 'Press Coverage', path: '/media#press', icon: '🗞️' },
+        {
+          label: "Annual Reports",
+          path: "/publications#annual-reports",
+          icon: "📈",
+        },
+        {
+          label: "Case Studies",
+          path: "/publications#case-studies",
+          icon: "📝",
+        },
+        {
+          label: "Our Publications",
+          path: "/publications#in-publications",
+          icon: "📚",
+        },
       ],
     },
     {
-      name: 'Get Involved',
-      path: '/get-involved',
+      name: "Media & Stories",
+      path: "/media",
       hasDropdown: true,
       dropdownItems: [
-        { label: 'Volunteer With Us', path: '/get-involved#volunteer', icon: '🤝' },
-        { label: 'Careers', path: '/get-involved#careers', icon: '💼' },
-        { label: 'Partners (EOI/RFQ)', path: '/get-involved#funds', icon: '🌱' },
-        // { label: 'Contact Us', path: '/contact', icon: '📞' },
+        { label: "Photo Gallery", path: "/media#photos", icon: "📸" },
+        { label: "Video Gallery", path: "/media#videos", icon: "🎥" },
+        { label: "Press Coverage", path: "/media#press", icon: "🗞️" },
       ],
     },
     {
-      name: 'Contact Us',
-      path: '/contact',
+      name: "Get Involved",
+      path: "/get-involved",
+      hasDropdown: true,
+      dropdownItems: [
+        {
+          label: "Volunteer With Us",
+          path: "/get-involved#volunteer",
+          icon: "🤝",
+        },
+        { label: "Careers", path: "/get-involved#careers", icon: "💼" },
+        {
+          label: "Partners (EOI/RFQ)",
+          path: "/get-involved#funds",
+          icon: "🌱",
+        },
+        // { label: "Contact Us", path: "/contact", icon: "📞" },
+      ],
+    },
+    {
+      name: "Contact Us",
+      path: "/contact",
     },
   ];
 
@@ -117,12 +144,15 @@ const Navbar = () => {
     <nav className="bg-white backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
-
           {/* Logo Section */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2">
               <div className="flex items-center justify-center h-16 w-auto">
-                <img src="/logo/logo-bg.png" alt="SDF Logo" className="h-full object-contain" />
+                <img
+                  src="/logo/logo-bg.png"
+                  alt="SDF Logo"
+                  className="h-full object-contain"
+                />
               </div>
             </Link>
           </div>
@@ -181,21 +211,24 @@ const Navbar = () => {
               onClick={() => setIsOpen(!isOpen)}
               className="text-text-primary hover:text-primary p-2 focus:outline-none"
             >
-              <span className="text-2xl font-bold">{isOpen ? '✕' : '☰'}</span>
+              <span className="text-2xl font-bold">{isOpen ? "✕" : "☰"}</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* Mobile Navigation */}
-      <div 
+      <div
         className={`lg:hidden transition-all duration-300 ease-in-out overflow-hidden ${
-          isOpen ? 'max-h-screen border-t border-gray-100' : 'max-h-0'
+          isOpen ? "max-h-screen border-t border-gray-100" : "max-h-0"
         }`}
       >
         <div className="px-4 pt-2 pb-6 space-y-1 bg-white shadow-inner max-h-[calc(100vh-80px)] overflow-y-auto">
           {menuItems.map((item) => (
-            <div key={item.name} className="border-b border-gray-50 last:border-0">
+            <div
+              key={item.name}
+              className="border-b border-gray-50 last:border-0"
+            >
               {item.hasDropdown ? (
                 <>
                   <button
@@ -203,13 +236,17 @@ const Navbar = () => {
                     className="w-full flex items-center justify-between px-3 py-4 text-base font-bold text-text-primary focus:outline-none"
                   >
                     {item.name}
-                    <span className={`text-sm text-gray-400 transition-transform ${activeMobileMenu === item.name ? 'rotate-180 text-primary' : ''}`}>
+                    <span
+                      className={`text-sm text-gray-400 transition-transform ${activeMobileMenu === item.name ? "rotate-180 text-primary" : ""}`}
+                    >
                       ▼
                     </span>
                   </button>
-                  <div 
+                  <div
                     className={`overflow-hidden transition-all duration-300 ease-in-out bg-gray-50 rounded-lg ${
-                      activeMobileMenu === item.name ? 'max-h-96 mb-2 opacity-100' : 'max-h-0 opacity-0'
+                      activeMobileMenu === item.name
+                        ? "max-h-96 mb-2 opacity-100"
+                        : "max-h-0 opacity-0"
                     }`}
                   >
                     {item.dropdownItems.map((subItem) => (
@@ -219,7 +256,7 @@ const Navbar = () => {
                         className="flex items-center gap-3 px-6 py-3 text-sm font-bold text-gray-600 hover:text-primary hover:bg-white transition-colors normal-case"
                         onClick={() => setIsOpen(false)}
                       >
-                        <span className="text-lg">{subItem.icon}</span> 
+                        <span className="text-lg">{subItem.icon}</span>
                         {formatLabel(subItem.label)}
                       </Link>
                     ))}
