@@ -117,6 +117,8 @@ const ProjectDetails = () => {
 
           <p className="text-lg md:text-xl max-w-2xl mx-auto flex items-center justify-center gap-2 text-green-50">
             <span>📍</span> {project.location}
+            {project.district && <span> • {project.district}</span>}
+            {project.village && <span> • {project.village}</span>}
           </p>
         </div>
       </section>
@@ -228,8 +230,8 @@ const ProjectDetails = () => {
                   <div className="space-y-4">
                     {project.achievements.split("\n").filter(a => a.trim()).map((ach, i) => (
                       <div key={i} className="group relative bg-white border border-gray-100 p-5 rounded-xl shadow-sm hover:border-yellow-200 hover:bg-yellow-50/30 transition-all font-medium text-gray-700 flex items-center gap-5">
-                       <div className="bg-yellow-100 text-yellow-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-xl group-hover:scale-110 transition-transform shadow-sm">🏆</div>
-                       <p className="flex-1 leading-relaxed">{ach}</p>
+                        <div className="bg-yellow-100 text-yellow-600 w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-xl group-hover:scale-110 transition-transform shadow-sm">🏆</div>
+                        <p className="flex-1 leading-relaxed">{ach}</p>
                       </div>
                     ))}
                   </div>
@@ -258,6 +260,11 @@ const ProjectDetails = () => {
                     <div>
                       <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-0.5">Location</p>
                       <p className="font-medium text-gray-800">{project.location}</p>
+                      {(project.district || project.village) && (
+                        <p className="text-xs text-gray-400">
+                          {project.district}{project.district && project.village ? ', ' : ''}{project.village}
+                        </p>
+                      )}
                     </div>
                   </li>
                   
