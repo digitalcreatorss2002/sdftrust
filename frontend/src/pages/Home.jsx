@@ -1,7 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
-import { motion, useScroll, useTransform, useMotionTemplate } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionTemplate,
+} from "framer-motion";
 import { API_BASE_URL, ADMIN_BASE_URL } from "../config";
 import Herosection from "../components/Herosection";
 import Testimonials from "./Testimonials";
@@ -58,30 +63,26 @@ const Home = () => {
   const [selectedMapState, setSelectedMapState] = useState(null);
 
   const [aboutData, setAboutData] = useState(null);
-  
+
   // 🔥 NEW: State for the recent 3 projects
   const [recentProjects, setRecentProjects] = useState([]);
 
   // Map Animation hooks
   const mapRef = useRef(null);
-  
+
   const { scrollYProgress } = useScroll({
     target: mapRef,
     offset: ["start 90%", "center center"],
   });
 
-  const mapScale = useTransform(
-    scrollYProgress, 
-    [0, 0.7, 1], 
-    [0.6, 0.85, 1]
-  );
-  
+  const mapScale = useTransform(scrollYProgress, [0, 0.7, 1], [0.6, 0.85, 1]);
+
   const mapClipPercentage = useTransform(
-    scrollYProgress, 
-    [0, 0.7, 1], 
-    [40, 60, 150]
+    scrollYProgress,
+    [0, 0.7, 1],
+    [40, 60, 150],
   );
-  
+
   const mapClipPath = useMotionTemplate`circle(${mapClipPercentage}% at 50% 50%)`;
 
   // Focus Areas Animation hooks
@@ -137,7 +138,9 @@ const Home = () => {
 
     const fetchFocusAreas = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/focus_areas.php?t=${Date.now()}`);
+        const response = await fetch(
+          `${API_BASE_URL}/focus_areas.php?t=${Date.now()}`,
+        );
         const data = await response.json();
         if (data.status === "success") {
           setFocusAreas(data.data);
@@ -149,7 +152,9 @@ const Home = () => {
 
     const fetchAboutData = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/about_who_we_are.php?t=${Date.now()}`);
+        const response = await fetch(
+          `${API_BASE_URL}/about_who_we_are.php?t=${Date.now()}`,
+        );
         const data = await response.json();
         if (data.status === "success" && data.data) {
           setAboutData(data.data);
@@ -162,9 +167,11 @@ const Home = () => {
     // 🔥 NEW: Fetch recent 3 projects
     const fetchRecentProjects = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/projects.php?t=${Date.now()}`);
+        const response = await fetch(
+          `${API_BASE_URL}/projects.php?t=${Date.now()}`,
+        );
         const data = await response.json();
-        if (data.status === 'success' && Array.isArray(data.data)) {
+        if (data.status === "success" && Array.isArray(data.data)) {
           // Grab only the first 3 projects
           setRecentProjects(data.data.slice(0, 3));
         }
@@ -175,7 +182,7 @@ const Home = () => {
 
     fetchPrograms();
     fetchFocusAreas();
-    fetchAboutData(); 
+    fetchAboutData();
     fetchRecentProjects(); // Trigger the fetch
   }, []);
 
@@ -271,16 +278,21 @@ const Home = () => {
                     key={project.id || idx}
                     className="bg-white rounded-2xl shadow-sm text-center border border-gray-100 pb-6 flex flex-col h-full hover:shadow-md transition-shadow"
                   >
-                    <div className="p-4 h-40"> {/* Fixed height to keep cards aligned */}
+                    <div className="p-4 h-40">
+                      {" "}
+                      {/* Fixed height to keep cards aligned */}
                       {isVideoFile(project.image_url) ? (
                         <video
-                          src={`${ADMIN_BASE_URL}${project.image_url?.replace(/^\/+/, '')}`}
+                          src={`${ADMIN_BASE_URL}${project.image_url?.replace(/^\/+/, "")}`}
                           className="w-full h-full object-cover rounded-xl shadow-sm"
-                          autoPlay loop muted playsInline
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
                         />
                       ) : (
                         <img
-                          src={`${ADMIN_BASE_URL}${project.image_url?.replace(/^\/+/, '')}`}
+                          src={`${ADMIN_BASE_URL}${project.image_url?.replace(/^\/+/, "")}`}
                           alt={project.title}
                           className="w-full h-full object-cover rounded-xl shadow-sm"
                           onError={(e) => {
@@ -300,8 +312,8 @@ const Home = () => {
                       <p className="text-gray-500 text-sm mb-6 grow line-clamp-3">
                         {project.description}
                       </p>
-                      
-                      <Link 
+
+                      <Link
                         to={`/projectdetails/${project.slug}`}
                         className="text-primary font-bold text-sm hover:underline mt-auto"
                       >
@@ -320,12 +332,19 @@ const Home = () => {
         </div>
       </section>
 
-      <section ref={focusRef} className="bg-bg-color relative flex justify-center py-4 overflow-hidden">
+      <section
+        ref={focusRef}
+        className="bg-bg-color relative flex justify-center py-4 overflow-hidden"
+      >
         <motion.div
-          style={{ width: "100%", maxWidth: focusMaxWidth, borderRadius: focusBorderRadius, scale: focusScale }}
+          style={{
+            width: "100%",
+            maxWidth: focusMaxWidth,
+            borderRadius: focusBorderRadius,
+            scale: focusScale,
+          }}
           className="mx-auto bg-accent text-center py-16 md:py-24 px-6 sm:px-12 lg:px-16 shadow-xl relative group"
         >
-
           <motion.h2
             initial={{ y: -20, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
@@ -342,15 +361,19 @@ const Home = () => {
                   key={area.id}
                   initial={{ y: 50, opacity: 0 }}
                   whileInView={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.3 + (index * 0.1) }}
+                  transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
                   viewport={{ once: false }}
                   className="bg-white p-6 rounded-3xl shadow-sm hover:-translate-y-2 hover:shadow-lg transition-all duration-300 flex flex-col md:flex-row items-center gap-4 justify-center border border-gray-100"
                 >
-                  <div className={`w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-sm ${area.color_class} ${area.animation_class}`}>
+                  <div
+                    className={`w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-sm ${area.color_class} ${area.animation_class}`}
+                  >
                     {area.icon}
                   </div>
                   <div className="text-center md:text-left">
-                    <p className="text-2xl font-bold text-gray-900">{area.number_text}</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {area.number_text}
+                    </p>
                     <p className="text-xs text-gray-500 uppercase tracking-wide">
                       {area.title}
                     </p>
@@ -358,7 +381,9 @@ const Home = () => {
                 </motion.div>
               ))
             ) : (
-              <p className="col-span-2 md:col-span-4 text-white">Loading Focus Areas...</p>
+              <p className="col-span-2 md:col-span-4 text-white">
+                Loading Focus Areas...
+              </p>
             )}
           </div>
         </motion.div>
@@ -437,7 +462,10 @@ const Home = () => {
 
       <section
         className="py-20 relative bg-cover bg-center bg-fixed"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')" }}
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')",
+        }}
       >
         {/* Elegant Dark Overlay */}
         <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
@@ -492,26 +520,30 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Map Section Grassroots Presence */}
       <section className="py-16 bg-bg-color">
         <div className="max-w-7xl mx-auto px-4">
-
           <h2 className="text-4xl font-serif text-text-primary mb-10 text-center">
             Our Grassroots Presence
           </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-            <div ref={mapRef} className="lg:col-span-2 relative h-150 md:h-200 flex items-center justify-center bg-transparent">
+            {/* MAP COLUMN */}
+            <div
+              ref={mapRef}
+              className="lg:col-span-2 relative h-150 md:h-200 flex items-center justify-center bg-transparent"
+            >
               <motion.div
                 style={{
                   scale: mapScale,
                   clipPath: mapClipPath,
-                  WebkitClipPath: mapClipPath, 
+                  WebkitClipPath: mapClipPath,
                   transformOrigin: "center center",
                   backfaceVisibility: "hidden",
                   width: "100%",
                   height: "100%",
                   position: "relative",
-                  zIndex: 10
+                  zIndex: 10,
                 }}
                 className="bg-accent rounded-xl overflow-hidden shadow-lg"
               >
@@ -519,73 +551,165 @@ const Home = () => {
               </motion.div>
             </div>
 
-            <div id="impact" className="bg-white sticky top-24  rounded-xl shadow-sm border border-gray-100 p-8 min-h-112.5">
+            {/* SIDEBAR COLUMN: IMPACT SNAPSHOT */}
+            <div
+              id="impact"
+              className="bg-white sticky top-24 rounded-xl shadow-sm border border-gray-100 p-8 min-h-112.5"
+            >
               {selectedMapState ? (
                 <div>
-                  <h3 className="text-xl font-serif font-bold text-text-primary mb-6 flex items-center gap-2">
-                    <span className="text-2xl mr-2">📊</span> Impact Snapshot
-                  </h3>
-                  <br />
-                  <div className="flex items-center justify-between mb-6 border-b border-gray-100 pb-4">
-                    <h4 className="text-2xl font-serif font-bold text-text-primary flex items-center">
-                      <span className="text-2xl mr-2">📍State:- </span> {selectedMapState.name}
-                    </h4>
-                    <button 
-                      onClick={() => setSelectedMapState(null)} 
-                      className="text-gray-400 hover:text-red-500 text-2xl font-bold transition-colors"
-                      title="Close"
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-xl font-serif font-bold text-text-primary flex items-center gap-2">
+                      <span className="text-2xl">📊</span> Impact Snapshot
+                    </h3>
+                    <button
+                      onClick={() => setSelectedMapState(null)}
+                      className="text-gray-400 hover:text-red-500 text-3xl font-light transition-colors p-1"
+                      title="Clear Selection"
                     >
                       &times;
                     </button>
                   </div>
 
-                  {selectedMapState.projects.length > 0 ? (
+                  <div className="mb-6 border-b border-gray-100 pb-4">
+                    <p className="text-xs text-primary font-bold uppercase tracking-widest mb-1">
+                      Currently Viewing
+                    </p>
+                    <h4 className="text-2xl font-serif font-bold text-text-primary flex items-center gap-2">
+                      📍 {selectedMapState.name}
+                    </h4>
+                  </div>
+
+                  {selectedMapState.projects &&
+                  selectedMapState.projects.length > 0 ? (
                     <div>
                       <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-4">
-                        Ongoing Projects ({selectedMapState.projects.length})
+                        Ongoing Initiatives ({selectedMapState.projects.length})
                       </p>
-                      <ul className="space-y-3 max-h-75 overflow-y-auto pr-2 custom-scrollbar">
+                      <div className="space-y-4 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
                         {selectedMapState.projects.map((proj, idx) => (
-                          <li key={idx} className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100 shadow-sm">
-                            <span className="text-primary text-lg leading-none">•</span>
-                            <span className="text-gray-700 font-medium text-sm leading-relaxed">{proj}</span>
-                          </li>
+                          <div
+                            key={idx}
+                            className="bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-xs hover:border-primary/30 transition-all"
+                          >
+                            {/* Project Title */}
+                            <h5 className="text-primary font-bold text-sm leading-tight mb-2 uppercase tracking-wide">
+                              {typeof proj === "string" ? proj : proj.title}
+                            </h5>
+
+                            {/* Detailed Locations (New Fields) */}
+                            {(proj.district || proj.village) && (
+                              <div className="flex flex-col gap-1.5 mt-2 pt-2 border-t border-gray-200/60">
+                                {proj.district && (
+                                  <div className="flex items-start gap-2">
+                                    <span className="text-xs opacity-70">
+                                      🏙️
+                                    </span>
+                                    <p className="text-[11px] text-gray-600 font-medium">
+                                      <span className="text-gray-400 font-normal">
+                                        District:
+                                      </span>{" "}
+                                      {proj.district}
+                                    </p>
+                                  </div>
+                                )}
+                                {proj.village && (
+                                  <div className="flex items-start gap-2">
+                                    <span className="text-xs opacity-70">
+                                      🏡
+                                    </span>
+                                    <p className="text-[11px] text-gray-600 font-medium">
+                                      <span className="text-gray-400 font-normal">
+                                        Village:
+                                      </span>{" "}
+                                      {proj.village}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   ) : (
-                    <div className="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                      <span className="text-4xl block mb-3 opacity-50">🌱</span>
-                      <p className="text-gray-500 font-medium">No active projects</p>
-                      <p className="text-gray-400 text-sm mt-1">in this state currently.</p>
+                    <div className="text-center py-16 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                      <span className="text-4xl block mb-3 opacity-30">🌱</span>
+                      <p className="text-gray-500 font-medium">
+                        No active projects
+                      </p>
+                      <p className="text-gray-400 text-sm mt-1">
+                        in this state currently.
+                      </p>
                     </div>
                   )}
                 </div>
               ) : (
+                /* DEFAULT VIEW (BEFORE CLICKING) */
                 <div>
-                  <h3 className="text-xl font-serif font-bold text-text-primary mb-6 flex items-center gap-2">
+                  <h3 className="text-xl font-serif font-bold text-text-primary mb-8 flex items-center gap-2">
                     <span className="text-2xl mr-2">📊</span> Impact Snapshot
                   </h3>
-                  <ul className="space-y-6">
-                    <li className="border-b pb-4">
-                      <div className="text-3xl font-bold text-primary mb-1">12</div>
-                      <div className="text-sm text-gray-600 uppercase tracking-wide">States Covered</div>
+                  <ul className="space-y-7">
+                    <li className="flex items-center gap-4 group">
+                      <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                        12
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-gray-800">
+                          States Covered
+                        </div>
+                        <div className="text-[11px] text-gray-500 uppercase tracking-tighter">
+                          Across India
+                        </div>
+                      </div>
                     </li>
-                    <li className="border-b pb-4">
-                      <div className="text-3xl font-bold text-secondary mb-1">45</div>
-                      <div className="text-sm text-gray-600 uppercase tracking-wide">Districts Operated In</div>
+                    <li className="flex items-center gap-4 group">
+                      <div className="w-12 h-12 rounded-full bg-secondary/10 text-secondary flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                        45+
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-gray-800">
+                          Districts Operated
+                        </div>
+                        <div className="text-[11px] text-gray-500 uppercase tracking-tighter">
+                          Local Intervention
+                        </div>
+                      </div>
                     </li>
-                    <li className="border-b pb-4">
-                      <div className="text-3xl font-bold text-accent mb-1">15+</div>
-                      <div className="text-sm text-gray-600 uppercase tracking-wide">Active Major Projects</div>
+                    <li className="flex items-center gap-4 group">
+                      <div className="w-12 h-12 rounded-full bg-accent/10 text-accent flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                        15+
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-gray-800">
+                          Major Projects
+                        </div>
+                        <div className="text-[11px] text-gray-500 uppercase tracking-tighter">
+                          Active Currently
+                        </div>
+                      </div>
                     </li>
-                    <li>
-                      <div className="text-3xl font-bold text-primary mb-1">2M+</div>
-                      <div className="text-sm text-gray-600 uppercase tracking-wide">Beneficiaries Reached</div>
+                    <li className="flex items-center gap-4 group">
+                      <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                        2M+
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-gray-800">
+                          Lives Impacted
+                        </div>
+                        <div className="text-[11px] text-gray-500 uppercase tracking-tighter">
+                          Total Beneficiaries
+                        </div>
+                      </div>
                     </li>
                   </ul>
-                  <div className="mt-8 pt-4 border-t border-gray-100 text-center">
-                    <p className="text-xs text-gray-400 italic">👆 Click any highlighted state on the map to view local projects.</p>
+                  <div className="mt-10 pt-6 border-t border-gray-100 text-center">
+                    <div className="inline-block animate-bounce mb-2">👆</div>
+                    <p className="text-xs text-gray-400 italic">
+                      Click any highlighted state on the map to view local
+                      project details.
+                    </p>
                   </div>
                 </div>
               )}
@@ -632,10 +756,11 @@ const Home = () => {
 
           {message.text && (
             <div
-              className={`max-w-lg mx-auto mt-4 p-3 rounded-lg text-sm font-medium ${message.type === "success"
-                ? "bg-green-100 text-green-800 border border-green-200"
-                : "bg-red-100 text-red-800 border border-red-200"
-                }`}
+              className={`max-w-lg mx-auto mt-4 p-3 rounded-lg text-sm font-medium ${
+                message.type === "success"
+                  ? "bg-green-100 text-green-800 border border-green-200"
+                  : "bg-red-100 text-red-800 border border-red-200"
+              }`}
             >
               {message.text}
             </div>
